@@ -58,6 +58,9 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: widget.items.mapIndexed((index, item) {
           bool isSelected = selected == index;
+          Color mainColor = isSelected
+              ? colorScheme.onSurface
+              : colorScheme.secondary;
           return Flexible(
             child: FittedBox(
               child: IntrinsicHeight(
@@ -65,7 +68,7 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
                   borderRadius: radius,
                   child: DecoratedBox(
                     decoration: BoxDecoration(
-                      color: isSelected ? theme.highlightColor : null,
+                      color: isSelected ? colorScheme.secondaryContainer : null,
                       borderRadius: radius,
                       boxShadow: [
                         if (isSelected)
@@ -90,9 +93,9 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: IconTheme(
-                            data: IconThemeData(color: colorScheme.secondary),
+                            data: IconThemeData(color: mainColor),
                             child: DefaultTextStyle(
-                              style: TextStyle(color: colorScheme.secondary),
+                              style: TextStyle(color: mainColor),
                               child: SizedBox(
                                 width: 60,
                                 child: Column(

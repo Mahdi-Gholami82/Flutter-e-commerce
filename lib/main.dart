@@ -1,4 +1,4 @@
-import 'package:digi_meh/home/presentation/page.dart';
+import 'package:digi_meh/landing/presentation/landing_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -18,7 +18,7 @@ class DigiMehApp extends StatelessWidget {
           brightness: Brightness.dark,
         ),
       ),
-      home: const HomePage(),
+      home: const LandingPage(),
     );
   }
 }
