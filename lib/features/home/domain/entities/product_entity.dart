@@ -8,6 +8,8 @@ class Product {
   double rating;
   int stock;
   List<ProductCategory> tags;
+  List<Uri> images;
+  Uri thumbnail;
 
   Product({
     required this.title,
@@ -17,5 +19,7 @@ class Product {
     required this.rating,
     required this.stock,
     required this.tags,
+    required this.images,
+    required this.thumbnail,
   });
 }

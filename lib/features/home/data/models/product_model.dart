@@ -7,6 +7,8 @@ class ProductModel {
     required this.rating,
     required this.stock,
     required this.tags,
+    required this.images,
+    required this.thumbnail,
   });
 
   String title;
@@ -16,6 +18,8 @@ class ProductModel {
   double rating;
   int stock;
   List<String> tags;
+  List<String> images;
+  String thumbnail;
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
     return ProductModel(
@@ -28,6 +32,8 @@ class ProductModel {
       tags:
           (json["tags"] as List<dynamic>?)?.map((e) => e as String).toList() ??
           [],
+      images: (json["images"] as List).cast<String>(),
+      thumbnail: json["thumbnail"],
     );
   }
 }

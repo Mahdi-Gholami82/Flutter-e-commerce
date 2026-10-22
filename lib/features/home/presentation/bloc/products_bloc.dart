@@ -1,16 +1,16 @@
-import 'package:bloc/bloc.dart';
+import 'package:digi_meh/features/home/domain/entities/product_list_entity.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 
-import 'package:digi_meh/features/home/domain/entities/product_entity.dart';
 import 'package:digi_meh/features/home/domain/use_cases/get_products_use_case.dart';
 
 // events
 sealed class ProductsBlocEvent {}
 
 class GetProductsEvent extends ProductsBlocEvent {
-  GetProductsEvent({required this.limit, required this.skip});
-  int limit;
-  int skip;
+  GetProductsEvent({required this.pageNumber});
+  int pageNumber;
 }
 
 // states
@@ -21,7 +21,7 @@ class ProductsInitial extends ProductsBlocState {}
 class ProductsLoading extends ProductsBlocState {}
 
 class ProductsLoaded extends ProductsBlocState {
-  List<Product> result;
+  ProductsList result;
   ProductsLoaded({required this.result});
 }
 
@@ -36,11 +36,16 @@ class ProductsBloc extends Bloc<ProductsBlocEvent, ProductsBlocState> {
       emit(ProductsLoading());
       try {
         var result = await GetIt.instance<GetProductsUseCase>().execute(
-          limit: event.limit,
-          skip: event.skip,
+          pageNumber: event.pageNumber,
         );
         emit(ProductsLoaded(result: result));
-      } on Exception catch (e) {
+      } on DioException catch (dioException) {
+        emit(
+          ProductsError(
+            message: "$dioException \nUri : ${dioException.requestOptions.uri}",
+          ),
+        );
+      } catch (e) {
         emit(ProductsError(message: e.toString()));
       }
     });

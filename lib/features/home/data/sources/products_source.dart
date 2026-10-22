@@ -1,11 +1,10 @@
-import 'dart:convert';
-
 import 'package:digi_meh/core/data/configs/api_config.dart';
-import 'package:digi_meh/features/home/data/models/product_model.dart';
+import 'package:digi_meh/features/home/data/models/products_list_model.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/widgets.dart';
 
 abstract class ProductsSource {
-  Future<List<ProductModel>> getProducts({
+  Future<ProductsListModel> getProducts({
     required int limit,
     required int skip,
   });
@@ -17,17 +16,17 @@ class ProductsSourceImpl extends ProductsSource {
   final ECommerceApiConfig apiConfig;
 
   @override
-  Future<List<ProductModel>> getProducts({
+  Future<ProductsListModel> getProducts({
     required int limit,
     required int skip,
   }) async {
-    Response<dynamic> response = await dio.getUri(
-      apiConfig.uri(
-        "/products",
-        queryParameters: {"limit": limit.toString(), "skip": skip.toString()},
-      ),
+    var uri = apiConfig.uri(
+      "/products",
+      queryParameters: {"limit": limit.toString(), "skip": skip.toString()},
     );
-    List<dynamic> json = jsonDecode(response.data);
-    return json.map((e) => ProductModel.fromJson(e)).toList();
+    debugPrint("GET: $uri");
+    Response<dynamic> response = await dio.getUri(uri);
+    Map<String, dynamic> json = response.data;
+    return ProductsListModel.fromJson(json);
   }
 }
