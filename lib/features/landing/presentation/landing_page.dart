@@ -1,8 +1,8 @@
-import 'package:digi_meh/cart/presentation/cart_page.dart';
-import 'package:digi_meh/category/presentation/category_page.dart';
-import 'package:digi_meh/home/presentation/home_page.dart';
-import 'package:digi_meh/landing/presentation/widgets/custom_navigation_bar.dart';
-import 'package:digi_meh/profile/presentation/profile_page.dart';
+import 'package:digi_meh/features/cart/presentation/cart_page.dart';
+import 'package:digi_meh/features/category/presentation/category_page.dart';
+import 'package:digi_meh/features/home/presentation/home_page.dart';
+import 'package:digi_meh/features/landing/presentation/widgets/custom_navigation_bar.dart';
+import 'package:digi_meh/features/profile/presentation/profile_page.dart';
 import 'package:flutter/material.dart';
 
 class LandingPage extends StatefulWidget {
