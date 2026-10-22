@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 
 class PageButton extends StatelessWidget {
-  const PageButton({super.key, required this.selected, required this.index});
+  const PageButton({
+    super.key,
+    required this.selected,
+    required this.index,
+    required this.onTap,
+  });
 
   final bool selected;
   final int index;
+  final void Function() onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +28,7 @@ class PageButton extends StatelessWidget {
               ? colorScheme.onPrimary.withValues(alpha: 0.16)
               : colorScheme.onSecondaryFixed.withValues(alpha: 0.16),
           borderRadius: BorderRadius.circular(8),
-          onTap: () {},
+          onTap: onTap,
           child: Center(
             child: Text(
               "$index",

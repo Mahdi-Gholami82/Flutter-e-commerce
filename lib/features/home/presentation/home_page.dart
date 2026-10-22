@@ -15,8 +15,16 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  SearchController searchController = SearchController();
+  var searchController = SearchController();
+  var scrollController = ScrollController();
   int currentPageNumber = 0;
+
+  void getProducts(BuildContext context, int pageIndex) {
+    BlocProvider.of<ProductsBloc>(
+      context,
+    ).add(GetProductsEvent(pageNumber: pageIndex));
+  }
+
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
@@ -36,25 +44,27 @@ class _HomePageState extends State<HomePage> {
                     action: SnackBarAction(
                       label: "Retry",
                       onPressed: () {
-                        BlocProvider.of<ProductsBloc>(
-                          context,
-                        ).add(GetProductsEvent(pageNumber: currentPageNumber));
+                        getProducts(context, currentPageNumber);
                       },
                     ),
                   ),
                 );
               }
-            default:
+            case ProductsLoading _:
               {
-                messenger.hideCurrentSnackBar();
+                scrollController.jumpTo(0);
               }
+            case ProductsLoaded loaded:
+              {
+                currentPageNumber = loaded.result.page.number;
+              }
+            case ProductsInitial():
           }
+          messenger.hideCurrentSnackBar();
         },
         builder: (context, state) {
           if (state is ProductsInitial) {
-            BlocProvider.of<ProductsBloc>(
-              context,
-            ).add(GetProductsEvent(pageNumber: currentPageNumber));
+            getProducts(context, currentPageNumber);
           }
           ProductsLoaded? loadedState = state is ProductsLoaded ? state : null;
           ProductsList? productsList = loadedState?.result;
@@ -62,6 +72,7 @@ class _HomePageState extends State<HomePage> {
           return Shimmer(
             enable: !productsLoaded,
             child: CustomScrollView(
+              controller: scrollController,
               slivers: [
                 SliverPadding(
                   padding: EdgeInsetsGeometry.all(10),
@@ -234,6 +245,9 @@ class _HomePageState extends State<HomePage> {
                             ? productsList.page.totalPages - 1
                             : 10,
                         selected: productsLoaded ? productsList.page.number : 1,
+                        onTap: ({required int pageIndex}) {
+                          getProducts(context, pageIndex);
+                        },
                       ),
                     ),
                   ),

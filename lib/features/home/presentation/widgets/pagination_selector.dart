@@ -1,5 +1,7 @@
+import 'package:digi_meh/features/home/presentation/bloc/products_bloc.dart';
 import 'package:digi_meh/features/home/presentation/widgets/page_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PaginationSelector extends StatefulWidget {
   const PaginationSelector({
@@ -8,11 +10,13 @@ class PaginationSelector extends StatefulWidget {
     required this.maxPage,
     required this.selected,
     this.minPage = 0,
+    required this.onTap,
   });
   final int numberOfOptions;
   final int maxPage;
   final int selected;
   final int minPage;
+  final void Function({required int pageIndex}) onTap;
 
   @override
   State<PaginationSelector> createState() => _PaginationSelectorState();
@@ -35,14 +39,10 @@ class _PaginationSelectorState extends State<PaginationSelector> {
 
   @override
   Widget build(BuildContext context) {
-    print("SELECTED: $selected");
-    print("MAX: ${widget.maxPage}");
     var begin = (selected - (widget.numberOfOptions / 2).floor()).clamp(
       widget.minPage,
       widget.maxPage - (widget.numberOfOptions - 1),
     );
-    print("BEGIN: $begin");
-
     List<int?> childrenIndexes = List.generate(
       widget.numberOfOptions,
       (index) => begin + index,
@@ -68,7 +68,13 @@ class _PaginationSelectorState extends State<PaginationSelector> {
               child: FittedBox(
                 child: index == null
                     ? Text("•", style: TextStyle(fontWeight: FontWeight.w900))
-                    : PageButton(selected: index == selected, index: index),
+                    : PageButton(
+                        selected: index == selected,
+                        index: index,
+                        onTap: () {
+                          widget.onTap(pageIndex: index);
+                        },
+                      ),
               ),
             ),
           )
