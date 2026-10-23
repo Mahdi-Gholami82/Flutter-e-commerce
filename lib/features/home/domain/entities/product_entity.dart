@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 import 'package:digi_meh/core/domain/entities/product_categories.dart';
 
 class Product {
@@ -24,4 +26,13 @@ class Product {
     required this.images,
     required this.thumbnail,
   });
+
+  @override
+  bool operator ==(covariant Product other) {
+    if (identical(this, other)) return true;
+    return other.id == id;
+  }
+
+  @override
+  int get hashCode => id.hashCode;
 }

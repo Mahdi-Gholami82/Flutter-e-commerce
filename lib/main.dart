@@ -1,4 +1,5 @@
 import 'package:digi_meh/core/data/configs/api_config.dart';
+import 'package:digi_meh/features/cart/presentation/bloc/cart_cubit.dart';
 import 'package:digi_meh/features/home/data/repositories/products_repository.dart';
 import 'package:digi_meh/features/home/data/sources/products_source.dart';
 import 'package:digi_meh/features/home/domain/entities/product_entity.dart';
@@ -7,6 +8,7 @@ import 'package:digi_meh/features/landing/presentation/landing_page.dart';
 import 'package:digi_meh/features/product_view/presentation/product_view_page.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -40,23 +42,26 @@ class DigiMehApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: "DigiMeh",
-      theme: ThemeData(
-        colorScheme: .fromSeed(
-          seedColor: Colors.deepPurple,
-          brightness: Brightness.dark,
+    return MultiBlocProvider(
+      providers: [BlocProvider(create: (_) => CartCubit())],
+      child: MaterialApp(
+        title: "DigiMeh",
+        theme: ThemeData(
+          colorScheme: .fromSeed(
+            seedColor: Colors.deepPurple,
+            brightness: Brightness.dark,
+          ),
         ),
+        home: const LandingPage(),
+        onGenerateRoute: (settings) => switch (settings.name) {
+          ProductViewPage.route => MaterialPageRoute(
+            builder: (context) {
+              return ProductViewPage(product: settings.arguments as Product);
+            },
+          ),
+          _ => null,
+        },
       ),
-      home: const LandingPage(),
-      onGenerateRoute: (settings) => switch (settings.name) {
-        ProductViewPage.route => MaterialPageRoute(
-          builder: (context) {
-            return ProductViewPage(product: settings.arguments as Product);
-          },
-        ),
-        _ => null,
-      },
     );
   }
 }

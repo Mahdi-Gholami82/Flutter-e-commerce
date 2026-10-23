@@ -1,9 +1,12 @@
+import 'package:collection/collection.dart';
 import 'package:digi_meh/core/presentation/utils/default_image_loaders.dart';
+import 'package:digi_meh/features/cart/presentation/bloc/cart_cubit.dart';
 import 'package:digi_meh/features/home/domain/entities/product_entity.dart';
-import 'package:digi_meh/features/product_view/presentation/widgets/item_counter.dart';
+import 'package:digi_meh/core/presentation/widgets/item_counter.dart';
 import 'package:digi_meh/features/product_view/presentation/widgets/page_view_indicated.dart';
 import 'package:digi_meh/features/product_view/presentation/widgets/shrikable_circle.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer_builder/shimmer_builder.dart';
 
 class ProductViewPage extends StatefulWidget {
@@ -17,7 +20,7 @@ class ProductViewPage extends StatefulWidget {
 
 class _ProductViewPageState extends State<ProductViewPage> {
   Product get product => widget.product;
-
+  int numberOfItem = 1;
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
@@ -210,13 +213,53 @@ class _ProductViewPageState extends State<ProductViewPage> {
                         children: [
                           Flexible(
                             flex: 5,
-                            child: FittedBox(child: ItemCounter()),
+                            child: FittedBox(
+                              child: DecoratedBox(
+                                decoration: ShapeDecoration(
+                                  shape: StadiumBorder(
+                                    side: BorderSide(
+                                      width: 2,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.secondary,
+                                    ),
+                                  ),
+                                ),
+                                child: BlocBuilder<CartCubit, CartCubitState>(
+                                  builder: (context, state) {
+                                    numberOfItem =
+                                        state.items
+                                            .firstWhereOrNull(
+                                              (e) => e.product == product,
+                                            )
+                                            ?.numberOfItem ??
+                                        1;
+                                    return ItemCounter(
+                                      enable: product.stock > 0,
+                                      initialCount: numberOfItem,
+                                      onChanged: (int number) {
+                                        numberOfItem = number;
+                                      },
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
                           ),
                           Flexible(
                             flex: 4,
                             child: FittedBox(
                               child: TextButton(
-                                onPressed: () {},
+                                onPressed: product.stock > 0
+                                    ? () {
+                                        BlocProvider.of<CartCubit>(
+                                          context,
+                                        ).addOrUpdateNumberOfItem(
+                                          product,
+                                          numberOfItem,
+                                        );
+                                      }
+                                    : null,
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Text("Add to Cart"),
