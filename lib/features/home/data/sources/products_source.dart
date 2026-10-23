@@ -43,7 +43,11 @@ class ProductsSourceImpl extends ProductsSource {
   Future<ProductsListModel> searchProducts({required String query}) async {
     var uri = apiConfig.uri(
       "/products/search",
-      queryParameters: {"q": query, "select": _selectProductFieldsQuery},
+      queryParameters: {
+        "q": query,
+        "select": _selectProductFieldsQuery,
+        "limit": "10",
+      },
     );
     debugPrint("GET: $uri");
     Response<dynamic> response = await dio.getUri(uri);

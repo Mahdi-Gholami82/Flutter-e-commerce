@@ -1,11 +1,9 @@
-import 'package:digi_meh/core/data/configs/constants.dart';
 import 'package:digi_meh/core/presentation/utils/default_image_loaders.dart';
 import 'package:digi_meh/features/home/domain/entities/product_entity.dart';
 import 'package:digi_meh/features/product_view/presentation/widgets/item_counter.dart';
 import 'package:digi_meh/features/product_view/presentation/widgets/page_view_indicated.dart';
 import 'package:digi_meh/features/product_view/presentation/widgets/shrikable_circle.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:shimmer_builder/shimmer_builder.dart';
 
 class ProductViewPage extends StatefulWidget {
