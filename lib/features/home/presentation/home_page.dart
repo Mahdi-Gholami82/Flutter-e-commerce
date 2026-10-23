@@ -1,9 +1,11 @@
 import 'package:digi_meh/core/data/configs/constants.dart';
+import 'package:digi_meh/core/presentation/utils/default_image_loaders.dart';
 import 'package:digi_meh/features/home/domain/entities/product_entity.dart';
 import 'package:digi_meh/features/home/domain/entities/product_list_entity.dart';
 import 'package:digi_meh/features/home/presentation/bloc/products_bloc.dart';
 import 'package:digi_meh/features/home/presentation/bloc/search_products_bloc.dart';
 import 'package:digi_meh/features/home/presentation/widgets/pagination_selector.dart';
+import 'package:digi_meh/features/product_view/presentation/product_view_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer_builder/shimmer_builder.dart';
@@ -163,78 +165,88 @@ class _HomePageState extends State<HomePage> {
                       (context, index) {
                         Product? currentProduct =
                             loadedState?.result.products[index];
-                        Widget getTempImageBox() =>
-                            SizedBox(width: 226, height: 226);
-
+                        final border = BorderRadius.circular(15);
                         return Stack(
                           children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                color: colorScheme.surfaceContainer,
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Flexible(
-                                      child: ShimmerBuilder(
-                                        childBuilder: (context) {
-                                          return Image.network(
-                                            currentProduct!.thumbnail
-                                                .toString(),
-                                            loadingBuilder:
-                                                (
-                                                  context,
-                                                  child,
-                                                  loadingProgress,
-                                                ) {
-                                                  if (loadingProgress == null) {
-                                                    return child;
-                                                  }
-                                                  return ShimmerPaintOver(
-                                                    child: FittedBox(
-                                                      child: getTempImageBox(),
-                                                    ),
-                                                  );
-                                                },
-                                          );
-                                        },
-                                        sampleBuilder: (context) =>
-                                            getTempImageBox(),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8),
-                                      child: ShimmerPaintOver(
-                                        child: Text(
-                                          productsLoaded
-                                              ? currentProduct!.title
-                                              : "sample txt",
-                                          style: TextStyle(
-                                            overflow: TextOverflow.ellipsis,
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w400,
+                            Material(
+                              borderRadius: border,
+                              color: colorScheme.surfaceContainer,
+                              child: Ink(
+                                child: InkWell(
+                                  customBorder: RoundedRectangleBorder(
+                                    borderRadius: border,
+                                  ),
+                                  onTap: () {
+                                    if (currentProduct != null) {
+                                      Navigator.of(context).pushNamed(
+                                        ProductViewPage.route,
+                                        arguments: currentProduct,
+                                      );
+                                    }
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Flexible(
+                                          child: ShimmerBuilder(
+                                            childBuilder: (context) {
+                                              return SizedBox.fromSize(
+                                                size: defaultImageSize,
+                                                child: Shimmer(
+                                                  enable: true,
+                                                  child: Image.network(
+                                                    currentProduct!.thumbnail
+                                                        .toString(),
+                                                    frameBuilder:
+                                                        defaultImageFrameBuilder,
+                                                    loadingBuilder:
+                                                        defaultImageLoadingBuilder,
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                            sampleBuilder: (context) =>
+                                                SizedBox.fromSize(
+                                                  size: defaultImageSize,
+                                                ),
                                           ),
                                         ),
-                                      ),
-                                    ),
-                                    FittedBox(
-                                      child: ShimmerPaintOver(
-                                        child: Text(
-                                          "${productsLoaded ? currentProduct!.price : "11.29"} \$",
-                                          style:
-                                              theme.textTheme.titleSmall ??
-                                              TextStyle(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w500,
-                                                color: colorScheme.onSurface,
+                                        Padding(
+                                          padding: const EdgeInsets.all(8),
+                                          child: ShimmerPaintOver(
+                                            child: Text(
+                                              productsLoaded
+                                                  ? currentProduct!.title
+                                                  : "sample txt",
+                                              style: TextStyle(
+                                                overflow: TextOverflow.ellipsis,
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w400,
                                               ),
+                                            ),
+                                          ),
                                         ),
-                                      ),
+                                        FittedBox(
+                                          child: ShimmerPaintOver(
+                                            child: Text(
+                                              "${productsLoaded ? currentProduct!.price : "11.29"} \$",
+                                              style:
+                                                  theme.textTheme.titleSmall ??
+                                                  TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w500,
+                                                    color:
+                                                        colorScheme.onSurface,
+                                                  ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
+                                  ),
                                 ),
                               ),
                             ),
