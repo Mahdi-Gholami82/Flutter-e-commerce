@@ -19,6 +19,7 @@ class ProductsRepositoryImpl extends ProductsRepository {
       products: productsList.products
           .map(
             (result) => Product(
+              id: result.id,
               title: result.title,
               description: result.description,
               price: result.price,

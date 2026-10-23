@@ -1,6 +1,7 @@
 import 'package:digi_meh/core/domain/entities/product_categories.dart';
 
 class Product {
+  int id;
   String title;
   String description;
   double price;
@@ -12,6 +13,7 @@ class Product {
   Uri thumbnail;
 
   Product({
+    required this.id,
     required this.title,
     required this.description,
     required this.price,
