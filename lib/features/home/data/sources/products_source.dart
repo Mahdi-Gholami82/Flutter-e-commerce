@@ -3,6 +3,9 @@ import 'package:digi_meh/features/home/data/models/products_list_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart';
 
+const String _selectProductFieldsQuery =
+    "id,title,description,price,discountPercentage,rating,stock,tags,images,thumbnail";
+
 abstract class ProductsSource {
   Future<ProductsListModel> getProducts({
     required int limit,
@@ -24,7 +27,11 @@ class ProductsSourceImpl extends ProductsSource {
   }) async {
     var uri = apiConfig.uri(
       "/products",
-      queryParameters: {"limit": limit.toString(), "skip": skip.toString()},
+      queryParameters: {
+        "limit": limit.toString(),
+        "skip": skip.toString(),
+        "select": _selectProductFieldsQuery,
+      },
     );
     debugPrint("GET: $uri");
     Response<dynamic> response = await dio.getUri(uri);
@@ -34,7 +41,10 @@ class ProductsSourceImpl extends ProductsSource {
 
   @override
   Future<ProductsListModel> searchProducts({required String query}) async {
-    var uri = apiConfig.uri("/products/search", queryParameters: {"q": query});
+    var uri = apiConfig.uri(
+      "/products/search",
+      queryParameters: {"q": query, "select": _selectProductFieldsQuery},
+    );
     debugPrint("GET: $uri");
     Response<dynamic> response = await dio.getUri(uri);
     Map<String, dynamic> json = response.data;
