@@ -132,8 +132,16 @@ class _HomePageState extends State<HomePage> {
                               ),
                               suggestionsBuilder: (context, controller) {
                                 return suggestions.map(
-                                  (product) =>
-                                      ListTile(title: Text(product.title)),
+                                  (product) => ListTile(
+                                    title: Text(product.title),
+                                    onTap: () async {
+                                      await Navigator.of(context).pushNamed(
+                                        ProductViewPage.route,
+                                        arguments: product,
+                                      );
+                                      controller.closeView("");
+                                    },
+                                  ),
                                 );
                               },
                             );
