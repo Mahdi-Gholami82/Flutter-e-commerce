@@ -43,6 +43,7 @@ dependencies:
       url: https://github.com/Mahdi-Gholami82/shimmer_builder
       ref: v0.1.0
   flutter_bloc: ^9.1.1
+  stream_transform: ^2.1.2
 
 dev_dependencies:
   flutter_test:

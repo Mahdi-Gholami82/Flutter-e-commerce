@@ -7,3 +7,10 @@ class GetProductsUseCase {
   Future<ProductsList> execute({required int pageNumber}) =>
       repository.getProducts(pageNumber: pageNumber);
 }
+
+class SearchProductsUseCase {
+  ProductsRepository repository;
+  SearchProductsUseCase({required this.repository});
+  Future<ProductsList> execute({required String query}) =>
+      repository.searchProducts(query: query);
+}

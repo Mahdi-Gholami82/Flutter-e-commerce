@@ -2,6 +2,7 @@ import 'package:digi_meh/core/data/configs/constants.dart';
 import 'package:digi_meh/features/home/domain/entities/product_entity.dart';
 import 'package:digi_meh/features/home/domain/entities/product_list_entity.dart';
 import 'package:digi_meh/features/home/presentation/bloc/products_bloc.dart';
+import 'package:digi_meh/features/home/presentation/bloc/search_products_bloc.dart';
 import 'package:digi_meh/features/home/presentation/widgets/pagination_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,6 +24,13 @@ class _HomePageState extends State<HomePage> {
     BlocProvider.of<ProductsBloc>(
       context,
     ).add(GetProductsEvent(pageNumber: pageIndex));
+  }
+
+  void _triggerSearchViewRebuild() {
+    const String zeroWidthSpace = '\u200B';
+    final previousText = searchController.text;
+    searchController.text = "$zeroWidthSpace$previousText";
+    searchController.text = previousText;
   }
 
   @override
@@ -69,6 +77,8 @@ class _HomePageState extends State<HomePage> {
           ProductsLoaded? loadedState = state is ProductsLoaded ? state : null;
           ProductsList? productsList = loadedState?.result;
           bool productsLoaded = loadedState != null;
+          List<Product> suggestions = [];
+
           return Shimmer(
             enable: !productsLoaded,
             child: CustomScrollView(
@@ -77,24 +87,56 @@ class _HomePageState extends State<HomePage> {
                 SliverPadding(
                   padding: EdgeInsetsGeometry.all(10),
                   sliver: SliverFloatingHeader(
-                    child: SearchAnchor(
-                      searchController: searchController,
-                      viewOnChanged: (value) {},
-                      builder: (context, controller) => SearchBar(
-                        hintText: "Search products...",
-                        onTap: () {
-                          searchController.openView();
-                        },
-                        controller: controller,
-                        leading: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Icon(Icons.search),
+                    child:
+                        BlocConsumer<SearchProductsBloc, SearchProductsState>(
+                          listener:
+                              (
+                                BuildContext context,
+                                SearchProductsState productsSearchState,
+                              ) {
+                                if (productsSearchState
+                                    is SearchProductsLoaded) {
+                                  suggestions =
+                                      productsSearchState.result.products;
+                                } else {
+                                  suggestions = [];
+                                }
+                                _triggerSearchViewRebuild();
+                              },
+                          builder: (context, productsSearchState) {
+                            return SearchAnchor(
+                              searchController: searchController,
+                              viewOnChanged: (value) {
+                                final query = value.trim();
+                                if (query.isNotEmpty) {
+                                  BlocProvider.of<SearchProductsBloc>(
+                                    context,
+                                  ).add(SearchProducts(query: query));
+                                } else {
+                                  suggestions = [];
+                                  _triggerSearchViewRebuild();
+                                }
+                              },
+                              builder: (context, controller) => SearchBar(
+                                hintText: "Search products...",
+                                onTap: () {
+                                  searchController.openView();
+                                },
+                                controller: controller,
+                                leading: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Icon(Icons.search),
+                                ),
+                              ),
+                              suggestionsBuilder: (context, controller) {
+                                return suggestions.map(
+                                  (product) =>
+                                      ListTile(title: Text(product.title)),
+                                );
+                              },
+                            );
+                          },
                         ),
-                      ),
-                      suggestionsBuilder: (context, controller) {
-                        return [];
-                      },
-                    ),
                   ),
                 ),
                 SliverPadding(

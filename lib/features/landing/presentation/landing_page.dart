@@ -1,6 +1,7 @@
 import 'package:digi_meh/features/cart/presentation/cart_page.dart';
 import 'package:digi_meh/features/category/presentation/category_page.dart';
 import 'package:digi_meh/features/home/presentation/bloc/products_bloc.dart';
+import 'package:digi_meh/features/home/presentation/bloc/search_products_bloc.dart';
 import 'package:digi_meh/features/home/presentation/home_page.dart';
 import 'package:digi_meh/features/landing/presentation/widgets/custom_navigation_bar.dart';
 import 'package:digi_meh/features/profile/presentation/profile_page.dart';
@@ -29,7 +30,10 @@ class _LandingPageState extends State<LandingPage> {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [BlocProvider(create: (context) => ProductsBloc())],
+      providers: [
+        BlocProvider(create: (context) => ProductsBloc()),
+        BlocProvider(create: (context) => SearchProductsBloc()),
+      ],
       child: Scaffold(
         bottomNavigationBar: CustomNavigationBar(
           initialSelection: selectedPage,

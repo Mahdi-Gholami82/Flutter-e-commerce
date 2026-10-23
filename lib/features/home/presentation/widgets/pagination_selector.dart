@@ -1,7 +1,5 @@
-import 'package:digi_meh/features/home/presentation/bloc/products_bloc.dart';
 import 'package:digi_meh/features/home/presentation/widgets/page_button.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PaginationSelector extends StatefulWidget {
   const PaginationSelector({

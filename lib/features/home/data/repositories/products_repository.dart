@@ -7,17 +7,14 @@ import 'package:digi_meh/features/home/domain/entities/product_list_entity.dart'
 
 abstract class ProductsRepository {
   Future<ProductsList> getProducts({required int pageNumber});
+  Future<ProductsList> searchProducts({required String query});
 }
 
 class ProductsRepositoryImpl extends ProductsRepository {
   ProductsSource dataSource;
   ProductsRepositoryImpl({required this.dataSource});
-  @override
-  Future<ProductsList> getProducts({required int pageNumber}) async {
-    ProductsListModel productsList = await dataSource.getProducts(
-      limit: productsListPaginationLimit,
-      skip: pageNumber * productsListPaginationLimit,
-    );
+
+  ProductsList _fromProductsListModel(ProductsListModel productsList) {
     return ProductsList(
       products: productsList.products
           .map(
@@ -38,10 +35,27 @@ class ProductsRepositoryImpl extends ProductsRepository {
           )
           .toList(),
       page: ProductsPage(
-        number: pageNumber,
+        number: (productsList.skip / productsListPaginationLimit).toInt(),
         totalProducts: productsList.total,
         totalPages: (productsList.total / productsListPaginationLimit).ceil(),
       ),
     );
+  }
+
+  @override
+  Future<ProductsList> getProducts({required int pageNumber}) async {
+    ProductsListModel productsList = await dataSource.getProducts(
+      limit: productsListPaginationLimit,
+      skip: pageNumber * productsListPaginationLimit,
+    );
+    return _fromProductsListModel(productsList);
+  }
+
+  @override
+  Future<ProductsList> searchProducts({required String query}) async {
+    ProductsListModel productsList = await dataSource.searchProducts(
+      query: query,
+    );
+    return _fromProductsListModel(productsList);
   }
 }

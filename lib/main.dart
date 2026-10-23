@@ -25,6 +25,7 @@ Future<void> configureDependencies() async {
     () => ProductsRepositoryImpl(dataSource: getIt()),
   );
   getIt.registerLazySingleton(() => GetProductsUseCase(repository: getIt()));
+  getIt.registerLazySingleton(() => SearchProductsUseCase(repository: getIt()));
 }
 
 Future<void> main() async {

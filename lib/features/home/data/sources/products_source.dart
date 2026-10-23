@@ -8,6 +8,8 @@ abstract class ProductsSource {
     required int limit,
     required int skip,
   });
+
+  Future<ProductsListModel> searchProducts({required String query});
 }
 
 class ProductsSourceImpl extends ProductsSource {
@@ -24,6 +26,15 @@ class ProductsSourceImpl extends ProductsSource {
       "/products",
       queryParameters: {"limit": limit.toString(), "skip": skip.toString()},
     );
+    debugPrint("GET: $uri");
+    Response<dynamic> response = await dio.getUri(uri);
+    Map<String, dynamic> json = response.data;
+    return ProductsListModel.fromJson(json);
+  }
+
+  @override
+  Future<ProductsListModel> searchProducts({required String query}) async {
+    var uri = apiConfig.uri("/products/search", queryParameters: {"q": query});
     debugPrint("GET: $uri");
     Response<dynamic> response = await dio.getUri(uri);
     Map<String, dynamic> json = response.data;
