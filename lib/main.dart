@@ -16,6 +16,8 @@ import 'package:digi_meh/features/home/domain/entities/product_entity.dart';
 import 'package:digi_meh/features/home/domain/use_cases/get_products_use_case.dart';
 import 'package:digi_meh/features/landing/presentation/landing_page.dart';
 import 'package:digi_meh/features/product_view/presentation/product_view_page.dart';
+import 'package:digi_meh/features/settings/presentation/bloc/theme_mode_cubit.dart';
+import 'package:digi_meh/features/settings/presentation/settings_page.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -85,6 +87,12 @@ class DigiMehApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider(
+          create: (context) => ThemeModeCubit(
+            GetIt.instance<PreferencesRepository>().getThemeMode(),
+          ),
+          lazy: false,
+        ),
         BlocProvider(create: (_) => CartCubit()),
         BlocProvider(create: (_) => PrefsCartBloc()..add(PrefsCartBlocLoad())),
         BlocProvider(
@@ -103,23 +111,33 @@ class DigiMehApp extends StatelessWidget {
             ).addAllCartItems(state.cartItems);
           }
         },
-        child: MaterialApp(
-          title: "DigiMeh",
-          theme: AppTheme.light,
-          darkTheme: AppTheme.dark,
-          home: const LandingPage(),
-          onGenerateRoute: (settings) => switch (settings.name) {
-            ProductViewPage.route => MaterialPageRoute(
-              builder: (context) {
-                return ProductViewPage(product: settings.arguments as Product);
+        child: BlocBuilder<ThemeModeCubit, ThemeMode>(
+          builder: (context, themeMode) {
+            return MaterialApp(
+              title: "DigiMeh",
+              themeMode: themeMode,
+              theme: AppTheme.light,
+              darkTheme: AppTheme.dark,
+              home: const LandingPage(),
+              routes: {SettingsPage.route: (context) => SettingsPage()},
+              onGenerateRoute: (settings) => switch (settings.name) {
+                ProductViewPage.route => MaterialPageRoute(
+                  builder: (context) {
+                    return ProductViewPage(
+                      product: settings.arguments as Product,
+                    );
+                  },
+                ),
+                SignInPage.route => MaterialPageRoute(
+                  builder: (context) {
+                    return SignInPage(
+                      checkOutWhenDone: settings.arguments as bool,
+                    );
+                  },
+                ),
+                _ => null,
               },
-            ),
-            SignInPage.route => MaterialPageRoute(
-              builder: (context) {
-                return SignInPage(checkOutWhenDone: settings.arguments as bool);
-              },
-            ),
-            _ => null,
+            );
           },
         ),
       ),

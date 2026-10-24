@@ -177,8 +177,13 @@ class _HomePageState extends State<HomePage> {
                         return Stack(
                           children: [
                             Material(
-                              borderRadius: border,
-                              color: colorScheme.surfaceContainer,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: border,
+                                side: BorderSide(
+                                  color: colorScheme.outlineVariant,
+                                ),
+                              ),
+
                               child: Ink(
                                 child: InkWell(
                                   customBorder: RoundedRectangleBorder(

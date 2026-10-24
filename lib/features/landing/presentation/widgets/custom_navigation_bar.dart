@@ -51,34 +51,28 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
     final BorderRadius radius = BorderRadius.circular(20);
     var theme = Theme.of(context);
     var colorScheme = theme.colorScheme;
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        spacing: 10,
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: widget.items.mapIndexed((index, item) {
-          bool isSelected = selected == index;
-          Color mainColor = isSelected
-              ? colorScheme.onSurface
-              : colorScheme.secondary;
-          return Flexible(
-            child: FittedBox(
-              child: IntrinsicHeight(
-                child: Material(
-                  borderRadius: radius,
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      color: isSelected ? colorScheme.secondaryContainer : null,
-                      borderRadius: radius,
-                      boxShadow: [
-                        if (isSelected)
-                          BoxShadow(
-                            spreadRadius: -1,
-                            blurRadius: 5,
-                            blurStyle: BlurStyle.outer,
-                          ),
-                      ],
-                    ),
+    return Container(
+      decoration: BoxDecoration(
+        boxShadow: [BoxShadow(blurRadius: 2, spreadRadius: -2)],
+        color: colorScheme.surfaceDim,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          spacing: 10,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: widget.items.mapIndexed((index, item) {
+            bool isSelected = selected == index;
+            Color mainColor = isSelected
+                ? colorScheme.onSurface
+                : colorScheme.secondary;
+            return Flexible(
+              child: FittedBox(
+                child: IntrinsicHeight(
+                  child: Material(
+                    borderRadius: radius,
+                    color: isSelected ? colorScheme.secondaryContainer : null,
+                    elevation: isSelected ? 2 : 0,
                     child: Ink(
                       child: InkWell(
                         customBorder: RoundedRectangleBorder(
@@ -111,9 +105,9 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
                   ),
                 ),
               ),
-            ),
-          );
-        }).toList(),
+            );
+          }).toList(),
+        ),
       ),
     );
   }

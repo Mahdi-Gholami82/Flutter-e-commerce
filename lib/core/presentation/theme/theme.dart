@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 abstract final class AppTheme {
@@ -86,7 +87,13 @@ abstract final class AppTheme {
     );
   }
 
-  static final ThemeData light = ThemeData(
+  static ThemeData get light {
+    // does not anything in release mode
+    _validateTextStylesExist(_light.textTheme);
+    return _light;
+  }
+
+  static final ThemeData _light = ThemeData(
     useMaterial3: true,
     colorScheme: lightColorScheme,
     scaffoldBackgroundColor: const Color(0xFFF4F4F5),
@@ -113,7 +120,13 @@ abstract final class AppTheme {
     inputDecorationTheme: _inputDecorationTheme(lightColorScheme),
   );
 
-  static final ThemeData dark = ThemeData(
+  static ThemeData get dark {
+    // does not anything in release mode
+    _validateTextStylesExist(_dark.textTheme);
+    return _dark;
+  }
+
+  static final ThemeData _dark = ThemeData(
     useMaterial3: true,
     colorScheme: darkColorScheme,
     scaffoldBackgroundColor: const Color(0xFF09090B),
@@ -139,4 +152,26 @@ abstract final class AppTheme {
     ),
     inputDecorationTheme: _inputDecorationTheme(darkColorScheme),
   );
+
+  static void _validateTextStylesExist(TextTheme textTheme) {
+    assert(
+      [
+        textTheme.displayLarge,
+        textTheme.displayMedium,
+        textTheme.displaySmall,
+        textTheme.headlineLarge,
+        textTheme.headlineMedium,
+        textTheme.headlineSmall,
+        textTheme.titleLarge,
+        textTheme.titleMedium,
+        textTheme.titleSmall,
+        textTheme.bodyLarge,
+        textTheme.bodyMedium,
+        textTheme.bodySmall,
+        textTheme.labelLarge,
+        textTheme.labelMedium,
+        textTheme.labelSmall,
+      ].every((style) => style != null),
+    );
+  }
 }

@@ -35,47 +35,57 @@ class _LandingPageState extends State<LandingPage> {
         BlocProvider(create: (_) => SearchProductsBloc()),
       ],
       child: Scaffold(
-        bottomNavigationBar: CustomNavigationBar(
-          initialSelection: selectedPage,
-          onChanged: (index) {
-            setState(() {
-              selectedPage = index;
-              pageController.animateToPage(
-                selectedPage,
-                duration: Duration(milliseconds: 200),
-                curve: Curves.linear,
-              );
-            });
-          },
-          items: [
-            CustomNavigationItem(icon: Icon(Icons.home), label: Text("Home")),
-            CustomNavigationItem(
-              icon: Icon(Icons.category),
-              label: Text("Category"),
+        body: Stack(
+          children: [
+            GestureDetector(
+              // onPanStart: (details) {
+              //   mouseStartOffset = pageController.offset + details.localPosition.dx;
+              // },
+              // onPanUpdate: (details) {
+              //   var position = pageController.position;
+              //   double toOffset =
+              //       (pageController.offset +
+              //               (mouseStartOffset - details.localPosition.dx))
+              //           .clamp(0, position.maxScrollExtent);
+              //   pageController.jumpTo(toOffset);
+              // },
+              child: PageView(controller: pageController, children: children),
             ),
-            CustomNavigationItem(
-              icon: Icon(Icons.shopping_cart),
-              label: Text("Cart"),
-            ),
-            CustomNavigationItem(
-              icon: Icon(Icons.account_circle_rounded),
-              label: Text("Profile"),
+            Positioned.fill(
+              top: null,
+              child: CustomNavigationBar(
+                initialSelection: selectedPage,
+                onChanged: (index) {
+                  setState(() {
+                    selectedPage = index;
+                    pageController.animateToPage(
+                      selectedPage,
+                      duration: Duration(milliseconds: 200),
+                      curve: Curves.linear,
+                    );
+                  });
+                },
+                items: [
+                  CustomNavigationItem(
+                    icon: Icon(Icons.home),
+                    label: Text("Home"),
+                  ),
+                  CustomNavigationItem(
+                    icon: Icon(Icons.category),
+                    label: Text("Category"),
+                  ),
+                  CustomNavigationItem(
+                    icon: Icon(Icons.shopping_cart),
+                    label: Text("Cart"),
+                  ),
+                  CustomNavigationItem(
+                    icon: Icon(Icons.account_circle_rounded),
+                    label: Text("Profile"),
+                  ),
+                ],
+              ),
             ),
           ],
-        ),
-        body: GestureDetector(
-          // onPanStart: (details) {
-          //   mouseStartOffset = pageController.offset + details.localPosition.dx;
-          // },
-          // onPanUpdate: (details) {
-          //   var position = pageController.position;
-          //   double toOffset =
-          //       (pageController.offset +
-          //               (mouseStartOffset - details.localPosition.dx))
-          //           .clamp(0, position.maxScrollExtent);
-          //   pageController.jumpTo(toOffset);
-          // },
-          child: PageView(controller: pageController, children: children),
         ),
       ),
     );

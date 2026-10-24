@@ -82,6 +82,9 @@ class CartPage extends StatelessWidget {
                                       decoration: BoxDecoration(
                                         color: colorScheme.surfaceContainer,
                                         borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(
+                                          color: colorScheme.outlineVariant,
+                                        ),
                                       ),
                                       child: LayoutBuilder(
                                         builder: (context, constraints) {
@@ -107,6 +110,10 @@ class CartPage extends StatelessWidget {
                                                               BorderRadius.circular(
                                                                 25,
                                                               ),
+                                                          border: Border.all(
+                                                            color: colorScheme
+                                                                .outlineVariant,
+                                                          ),
                                                         ),
                                                         child: ShimmerBuilder(
                                                           sampleBuilder: (context) =>
