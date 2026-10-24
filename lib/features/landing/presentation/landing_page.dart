@@ -1,4 +1,4 @@
-import 'package:digi_meh/features/cart/presentation/bloc/cart_cubit.dart';
+import 'package:digi_meh/features/cart/presentation/bloc/cart_prefs_bloc.dart';
 import 'package:digi_meh/features/cart/presentation/cart_page.dart';
 import 'package:digi_meh/features/category/presentation/category_page.dart';
 import 'package:digi_meh/features/home/presentation/bloc/products_bloc.dart';

@@ -1,5 +1,8 @@
 import 'package:digi_meh/core/data/configs/api_config.dart';
+import 'package:digi_meh/core/data/repositories/preferences_repository.dart';
+import 'package:digi_meh/core/data/sources/preferences_data_source.dart';
 import 'package:digi_meh/features/cart/presentation/bloc/cart_cubit.dart';
+import 'package:digi_meh/features/cart/presentation/bloc/cart_prefs_bloc.dart';
 import 'package:digi_meh/features/home/data/repositories/products_repository.dart';
 import 'package:digi_meh/features/home/data/sources/products_source.dart';
 import 'package:digi_meh/features/home/domain/entities/product_entity.dart';
@@ -17,6 +20,7 @@ final getIt = GetIt.instance;
 Future<void> configureDependencies() async {
   //prefs
   var prefs = await SharedPreferences.getInstance();
+  getIt.registerSingleton<SharedPreferences>(prefs);
 
   getIt.registerSingleton(ECommerceApiConfig(host: "dummyjson.com"));
   getIt.registerSingleton(Dio());
@@ -28,6 +32,18 @@ Future<void> configureDependencies() async {
   getIt.registerLazySingleton<ProductsRepository>(
     () => ProductsRepositoryImpl(dataSource: getIt()),
   );
+
+  //prefs repo
+  getIt.registerLazySingleton<PreferencesDataSource>(
+    () => PreferencesDataSourceImpl(prefs: prefs),
+  );
+  getIt.registerLazySingleton<PreferencesRepository>(
+    () => PreferencesRepositoryImpl(
+      dataSource: getIt(),
+      productsRepository: getIt(),
+    ),
+  );
+
   getIt.registerLazySingleton(() => GetProductsUseCase(repository: getIt()));
   getIt.registerLazySingleton(() => SearchProductsUseCase(repository: getIt()));
 }
@@ -43,24 +59,42 @@ class DigiMehApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [BlocProvider(create: (_) => CartCubit())],
-      child: MaterialApp(
-        title: "DigiMeh",
-        theme: ThemeData(
-          colorScheme: .fromSeed(
-            seedColor: Colors.deepPurple,
-            brightness: Brightness.dark,
-          ),
+      providers: [
+        BlocProvider(create: (_) => CartCubit()),
+        BlocProvider(
+          create: (_) => PrefsCartBloc()..add(PrefsCartBlocLoad()),
+          lazy: true,
         ),
-        home: const LandingPage(),
-        onGenerateRoute: (settings) => switch (settings.name) {
-          ProductViewPage.route => MaterialPageRoute(
-            builder: (context) {
-              return ProductViewPage(product: settings.arguments as Product);
-            },
-          ),
-          _ => null,
+      ],
+      child: BlocListener<PrefsCartBloc, PrefsCartBlocState>(
+        listenWhen: (previous, current) =>
+            previous is CartBlocPrefsLoading &&
+            current is PrefsCartBlocFullyLoaded,
+        listener: (context, state) {
+          if (state is PrefsCartBlocFullyLoaded) {
+            BlocProvider.of<CartCubit>(
+              context,
+            ).addAllCartItems(state.cartItems);
+          }
         },
+        child: MaterialApp(
+          title: "DigiMeh",
+          theme: ThemeData(
+            colorScheme: .fromSeed(
+              seedColor: Colors.deepPurple,
+              brightness: Brightness.dark,
+            ),
+          ),
+          home: const LandingPage(),
+          onGenerateRoute: (settings) => switch (settings.name) {
+            ProductViewPage.route => MaterialPageRoute(
+              builder: (context) {
+                return ProductViewPage(product: settings.arguments as Product);
+              },
+            ),
+            _ => null,
+          },
+        ),
       ),
     );
   }

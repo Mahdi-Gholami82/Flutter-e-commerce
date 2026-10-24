@@ -8,11 +8,13 @@ class ItemCounter extends StatefulWidget {
     required this.initialCount,
     required this.onChanged,
     this.textColor,
+    this.onDelete,
   });
   final bool enable;
   final int initialCount;
   final void Function(int number) onChanged;
   final Color? textColor;
+  final void Function()? onDelete;
 
   @override
   State<ItemCounter> createState() => _ItemCounterState();
@@ -20,20 +22,20 @@ class ItemCounter extends StatefulWidget {
 
 class _ItemCounterState extends State<ItemCounter> {
   final TextEditingController controller = TextEditingController();
-  late int _count;
   set count(int value) {
-    _count = value;
-    controller.value = controller.value.copyWith(text: value.toString());
+    final valueText = value.toString();
+    controller.value = controller.value.copyWith(
+      text: valueText,
+      selection: TextSelection.collapsed(offset: valueText.length),
+    );
   }
 
-  int get count => _count;
+  int get count => int.parse(controller.text);
 
   void resetTextIfNeccessary() {
     var trimmed = controller.text.trim();
     if (trimmed.isEmpty || (int.tryParse(trimmed) ?? 0) < 1) {
       count = 1;
-    } else {
-      _count = int.parse(controller.text);
     }
   }
 
@@ -65,35 +67,43 @@ class _ItemCounterState extends State<ItemCounter> {
   @override
   void didUpdateWidget(covariant ItemCounter oldWidget) {
     super.didUpdateWidget(oldWidget);
-    count = widget.initialCount;
+    if (oldWidget.initialCount != widget.initialCount) {
+      count = widget.initialCount;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    var enableDelete = count == 1 && widget.onDelete != null;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Transform.scale(
-          scale: 0.9,
-          child: IconButton(
-            onPressed: widget.enable
-                ? () {
+        IconButton(
+          onPressed: widget.enable
+              ? () {
+                  if (enableDelete) {
+                    widget.onDelete!();
+                  } else {
                     count = (count - 1).clamp(0, double.infinity).toInt();
                   }
-                : null,
-            icon: Icon(Icons.remove),
-          ),
+                }
+              : null,
+          icon: Icon(enableDelete ? Icons.delete : Icons.remove),
         ),
         SizedBox(
           width: 50,
-          height: 20,
+          height: 30,
           child: TextField(
             enabled: widget.enable,
             controller: controller,
             textAlign: TextAlign.center,
             textAlignVertical: TextAlignVertical.center,
-            style: TextStyle(fontSize: 17, color: widget.textColor),
+            style: TextStyle(
+              fontSize: 17,
+              color: widget.textColor,
+              height: 1.0,
+            ),
             enableSuggestions: false,
             inputFormatters: [
               LengthLimitingTextInputFormatter(5),
@@ -102,20 +112,17 @@ class _ItemCounterState extends State<ItemCounter> {
             decoration: const InputDecoration(
               border: InputBorder.none,
               isDense: true,
-              contentPadding: EdgeInsets.all(9),
+              contentPadding: EdgeInsets.zero,
             ),
           ),
         ),
-        Transform.scale(
-          scale: 0.9,
-          child: IconButton(
-            onPressed: widget.enable
-                ? () {
-                    count = (count + 1).clamp(0, double.infinity).toInt();
-                  }
-                : null,
-            icon: Icon(Icons.add),
-          ),
+        IconButton(
+          onPressed: widget.enable
+              ? () {
+                  count = (count + 1).clamp(0, double.infinity).toInt();
+                }
+              : null,
+          icon: Icon(Icons.add),
         ),
       ],
     );

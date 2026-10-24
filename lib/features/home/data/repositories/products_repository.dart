@@ -1,5 +1,6 @@
 import 'package:digi_meh/core/data/configs/constants.dart';
 import 'package:digi_meh/core/domain/entities/product_categories.dart';
+import 'package:digi_meh/features/home/data/models/product_model.dart';
 import 'package:digi_meh/features/home/data/models/products_list_model.dart';
 import 'package:digi_meh/features/home/data/sources/products_source.dart';
 import 'package:digi_meh/features/home/domain/entities/product_entity.dart';
@@ -8,6 +9,7 @@ import 'package:digi_meh/features/home/domain/entities/product_list_entity.dart'
 abstract class ProductsRepository {
   Future<ProductsList> getProducts({required int pageNumber});
   Future<ProductsList> searchProducts({required String query});
+  Future<Product> getSingleProuduct({required int id});
 }
 
 class ProductsRepositoryImpl extends ProductsRepository {
@@ -16,25 +18,7 @@ class ProductsRepositoryImpl extends ProductsRepository {
 
   ProductsList _fromProductsListModel(ProductsListModel productsList) {
     return ProductsList(
-      products: productsList.products
-          .map(
-            (result) => Product(
-              id: result.id,
-              title: result.title,
-              description: result.description,
-              price: result.price,
-              discountPercentage: result.discountPercentage,
-              rating: result.rating,
-              stock: result.stock,
-              tags: result.tags
-                  .map((e) => ProductCategory.fromId(e))
-                  .nonNulls
-                  .toList(),
-              images: result.images.map(Uri.tryParse).nonNulls.toList(),
-              thumbnail: Uri.parse(result.thumbnail),
-            ),
-          )
-          .toList(),
+      products: productsList.products.map(_fromProductModel).toList(),
       page: ProductsPage(
         number: (productsList.skip / productsListPaginationLimit).toInt(),
         totalProducts: productsList.total,
@@ -42,6 +26,22 @@ class ProductsRepositoryImpl extends ProductsRepository {
       ),
     );
   }
+
+  Product _fromProductModel(ProductModel productModel) => Product(
+    id: productModel.id,
+    title: productModel.title,
+    description: productModel.description,
+    price: productModel.price,
+    discountPercentage: productModel.discountPercentage,
+    rating: productModel.rating,
+    stock: productModel.stock,
+    tags: productModel.tags
+        .map((e) => ProductCategory.fromId(e))
+        .nonNulls
+        .toList(),
+    images: productModel.images.map(Uri.tryParse).nonNulls.toList(),
+    thumbnail: Uri.parse(productModel.thumbnail),
+  );
 
   @override
   Future<ProductsList> getProducts({required int pageNumber}) async {
@@ -58,5 +58,10 @@ class ProductsRepositoryImpl extends ProductsRepository {
       query: query,
     );
     return _fromProductsListModel(productsList);
+  }
+
+  @override
+  Future<Product> getSingleProuduct({required int id}) async {
+    return _fromProductModel(await dataSource.getSingleProuduct(id: id));
   }
 }

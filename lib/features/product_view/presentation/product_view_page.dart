@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:digi_meh/core/presentation/utils/default_image_loaders.dart';
 import 'package:digi_meh/features/cart/presentation/bloc/cart_cubit.dart';
+import 'package:digi_meh/features/cart/presentation/bloc/cart_prefs_bloc.dart';
 import 'package:digi_meh/features/home/domain/entities/product_entity.dart';
 import 'package:digi_meh/core/presentation/widgets/item_counter.dart';
 import 'package:digi_meh/features/product_view/presentation/widgets/page_view_indicated.dart';

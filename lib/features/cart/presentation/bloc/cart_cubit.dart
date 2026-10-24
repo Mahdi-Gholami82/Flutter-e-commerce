@@ -1,8 +1,9 @@
 import 'package:collection/collection.dart';
+import 'package:digi_meh/core/data/repositories/preferences_repository.dart';
+import 'package:digi_meh/features/cart/domain/entities/cart_item_entity.dart';
 import 'package:digi_meh/features/home/domain/entities/product_entity.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'package:digi_meh/features/cart/domain/entities/cart_item_entity.dart';
+import 'package:get_it/get_it.dart';
 
 class CartCubitState {
   CartCubitState() : items = [];
@@ -15,6 +16,14 @@ class CartCubitState {
 
 class CartCubit extends Cubit<CartCubitState> {
   CartCubit() : super(CartCubitState());
+
+  @override
+  void onChange(Change<CartCubitState> change) {
+    super.onChange(change);
+    GetIt.instance<PreferencesRepository>().saveCartItems(
+      change.nextState.items,
+    );
+  }
 
   void addOrUpdateNumberOfItem(Product product, int numberOfItem) {
     assert(numberOfItem >= 0);
@@ -36,7 +45,7 @@ class CartCubit extends Cubit<CartCubitState> {
     emit(state.copy());
   }
 
-  bool remove(Product product) {
+  bool removeFromProduct(Product product) {
     bool result = state.items.remove(
       state.items.firstWhereOrNull((e) => e.product == product),
     );
@@ -46,10 +55,31 @@ class CartCubit extends Cubit<CartCubitState> {
     return result;
   }
 
-  void add(Product product, int numberOfItem) {
+  bool remove(CartItem cartItem) {
+    bool result = state.items.remove(cartItem);
+    if (result) {
+      emit(state.copy());
+    }
+    return result;
+  }
+
+  void add(CartItem cartItem) {
+    state.items.remove(cartItem);
+    state.items.add(cartItem);
+    emit(state.copy());
+  }
+
+  void addFromProduct(Product product, int numberOfItem) {
     assert(numberOfItem >= 0);
-    remove(product);
+    removeFromProduct(product);
     state.items.add(CartItem(product: product, numberOfItem: numberOfItem));
     emit(state.copy());
+  }
+
+  void addAllCartItems(List<CartItem> cartItems) {
+    final Set<CartItem> stateSet = state.items.toSet();
+    stateSet.addAll(cartItems);
+    emit(CartCubitState.fromItems(items: stateSet.toList()));
+    print("ADD ALL ${state.items.length}");
   }
 }
