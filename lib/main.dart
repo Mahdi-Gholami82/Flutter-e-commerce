@@ -1,6 +1,7 @@
 import 'package:digi_meh/core/data/configs/api_config.dart';
 import 'package:digi_meh/core/data/repositories/preferences_repository.dart';
 import 'package:digi_meh/core/data/sources/preferences_data_source.dart';
+import 'package:digi_meh/core/presentation/theme/theme.dart';
 import 'package:digi_meh/features/auth/data/repositories/auth_repository.dart';
 import 'package:digi_meh/features/auth/data/repositories/secure_storage_repository.dart';
 import 'package:digi_meh/features/auth/data/sources/auth_data_source.dart';
@@ -104,12 +105,8 @@ class DigiMehApp extends StatelessWidget {
         },
         child: MaterialApp(
           title: "DigiMeh",
-          theme: ThemeData(
-            colorScheme: .fromSeed(
-              seedColor: Colors.deepPurple,
-              brightness: Brightness.dark,
-            ),
-          ),
+          theme: AppTheme.light,
+          darkTheme: AppTheme.dark,
           home: const LandingPage(),
           onGenerateRoute: (settings) => switch (settings.name) {
             ProductViewPage.route => MaterialPageRoute(

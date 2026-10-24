@@ -80,7 +80,7 @@ class CartPage extends StatelessWidget {
                                         vertical: 10,
                                       ),
                                       decoration: BoxDecoration(
-                                        color: colorScheme.surfaceContainerLow,
+                                        color: colorScheme.surfaceContainer,
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       child: LayoutBuilder(
@@ -102,7 +102,7 @@ class CartPage extends StatelessWidget {
                                                       child: Container(
                                                         decoration: BoxDecoration(
                                                           color: colorScheme
-                                                              .surfaceContainerHigh,
+                                                              .secondaryFixed,
                                                           borderRadius:
                                                               BorderRadius.circular(
                                                                 25,

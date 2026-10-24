@@ -29,7 +29,10 @@ class ProfilePage extends StatelessWidget {
                     children: [
                       Column(
                         children: [
-                          Container(color: colorScheme.secondary, height: 150),
+                          Container(
+                            color: colorScheme.secondaryFixedDim,
+                            height: 150,
+                          ),
                           SizedBox(height: 90),
                         ],
                       ),
