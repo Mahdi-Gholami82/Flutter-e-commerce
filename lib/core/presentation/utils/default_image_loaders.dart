@@ -2,6 +2,9 @@ import 'package:digi_meh/core/data/configs/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer_builder/shimmer_builder.dart';
 
+Widget _getPaintOverImage() =>
+    ShimmerPaintOver(child: SizedBox.fromSize(size: defaultImageSize));
+
 Widget defaultImageLoadingBuilder(
   BuildContext context,
   Widget child,
@@ -11,7 +14,7 @@ Widget defaultImageLoadingBuilder(
     return child;
   }
 
-  return ShimmerPaintOver(child: SizedBox.fromSize(size: defaultImageSize));
+  return _getPaintOverImage();
 }
 
 Widget defaultImageFrameBuilder(
@@ -24,5 +27,13 @@ Widget defaultImageFrameBuilder(
     return child;
   }
 
-  return ShimmerPaintOver(child: SizedBox.fromSize(size: defaultImageSize));
+  return _getPaintOverImage();
+}
+
+Widget defaultImageErrorBuilder(
+  BuildContext context,
+  Object exception,
+  StackTrace? stackTrace,
+) {
+  return _getPaintOverImage();
 }

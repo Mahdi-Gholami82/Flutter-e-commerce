@@ -1,6 +1,9 @@
 import 'package:digi_meh/core/data/configs/constants.dart';
 import 'package:digi_meh/core/presentation/utils/default_image_loaders.dart';
+import 'package:digi_meh/core/presentation/widgets/default_shimmer_network_image.dart';
 import 'package:digi_meh/core/presentation/widgets/item_counter.dart';
+import 'package:digi_meh/features/auth/presentation/bloc/auth_status_bloc.dart';
+import 'package:digi_meh/features/auth/presentation/pages/sign_in_page.dart';
 import 'package:digi_meh/features/cart/domain/entities/cart_item_entity.dart';
 import 'package:digi_meh/features/cart/presentation/bloc/cart_cubit.dart';
 import 'package:digi_meh/features/cart/presentation/bloc/cart_prefs_bloc.dart';
@@ -113,13 +116,10 @@ class CartPage extends StatelessWidget {
                                                                     defaultImageSize,
                                                               ),
                                                           childBuilder: (context) {
-                                                            return Image.network(
-                                                              product!.thumbnail
+                                                            return DefaultShimmerNetworkImage(
+                                                              uriString: product!
+                                                                  .thumbnail
                                                                   .toString(),
-                                                              frameBuilder:
-                                                                  defaultImageFrameBuilder,
-                                                              loadingBuilder:
-                                                                  defaultImageLoadingBuilder,
                                                             );
                                                           },
                                                         ),
@@ -139,12 +139,15 @@ class CartPage extends StatelessWidget {
                                                             .start,
                                                     children: [
                                                       Flexible(
-                                                        child: Text(
-                                                          product?.title ??
-                                                              "Some sample product title",
-                                                          maxLines: 1,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
+                                                        child: ShimmerPaintOver(
+                                                          child: Text(
+                                                            product?.title ??
+                                                                "Some sample product title",
+                                                            maxLines: 1,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                          ),
                                                         ),
                                                       ),
                                                       Align(
@@ -263,7 +266,20 @@ class CartPage extends StatelessWidget {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: colorScheme.primaryContainer,
                       ),
-                      onPressed: isEmpty ? null : () {},
+                      onPressed: isEmpty
+                          ? null
+                          : () {
+                              var authBloc = BlocProvider.of<AuthBloc>(context);
+                              if (authBloc.state is AuthStatusAuthenticated) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text("Success!")),
+                                );
+                              } else {
+                                Navigator.of(
+                                  context,
+                                ).pushNamed(SignInPage.route, arguments: true);
+                              }
+                            },
                       child: ConstrainedBox(
                         constraints: BoxConstraints(minHeight: 45),
                         child: Row(

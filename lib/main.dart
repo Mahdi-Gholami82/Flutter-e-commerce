@@ -1,6 +1,12 @@
 import 'package:digi_meh/core/data/configs/api_config.dart';
 import 'package:digi_meh/core/data/repositories/preferences_repository.dart';
 import 'package:digi_meh/core/data/sources/preferences_data_source.dart';
+import 'package:digi_meh/features/auth/data/repositories/auth_repository.dart';
+import 'package:digi_meh/features/auth/data/repositories/secure_storage_repository.dart';
+import 'package:digi_meh/features/auth/data/sources/auth_data_source.dart';
+import 'package:digi_meh/features/auth/data/sources/secure_storage_source.dart';
+import 'package:digi_meh/features/auth/presentation/bloc/auth_status_bloc.dart';
+import 'package:digi_meh/features/auth/presentation/pages/sign_in_page.dart';
 import 'package:digi_meh/features/cart/presentation/bloc/cart_cubit.dart';
 import 'package:digi_meh/features/cart/presentation/bloc/cart_prefs_bloc.dart';
 import 'package:digi_meh/features/home/data/repositories/products_repository.dart';
@@ -12,6 +18,7 @@ import 'package:digi_meh/features/product_view/presentation/product_view_page.da
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -46,6 +53,23 @@ Future<void> configureDependencies() async {
 
   getIt.registerLazySingleton(() => GetProductsUseCase(repository: getIt()));
   getIt.registerLazySingleton(() => SearchProductsUseCase(repository: getIt()));
+
+  // secure storage
+  getIt.registerSingleton(FlutterSecureStorage());
+  getIt.registerLazySingleton<SecureStorageSource>(
+    () => SecureStorageSourceImpl(secureStorage: getIt()),
+  );
+  getIt.registerLazySingleton<SecureStorageRepository>(
+    () => SecureStorageRepositoryImpl(dataSource: getIt()),
+  );
+
+  // auth
+  getIt.registerLazySingleton<AuthDataSource>(
+    () => AuthDataSourceImpl(apiConfig: getIt(), dio: getIt()),
+  );
+  getIt.registerLazySingleton<AuthRepository>(
+    () => AuthRepositoryImpl(dataSource: getIt()),
+  );
 }
 
 Future<void> main() async {
@@ -61,9 +85,10 @@ class DigiMehApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => CartCubit()),
+        BlocProvider(create: (_) => PrefsCartBloc()..add(PrefsCartBlocLoad())),
         BlocProvider(
-          create: (_) => PrefsCartBloc()..add(PrefsCartBlocLoad()),
-          lazy: true,
+          create: (_) =>
+              AuthBloc()..add(AuthEventDoAuthenticateFromLocalToken()),
         ),
       ],
       child: BlocListener<PrefsCartBloc, PrefsCartBlocState>(
@@ -90,6 +115,11 @@ class DigiMehApp extends StatelessWidget {
             ProductViewPage.route => MaterialPageRoute(
               builder: (context) {
                 return ProductViewPage(product: settings.arguments as Product);
+              },
+            ),
+            SignInPage.route => MaterialPageRoute(
+              builder: (context) {
+                return SignInPage(checkOutWhenDone: settings.arguments as bool);
               },
             ),
             _ => null,

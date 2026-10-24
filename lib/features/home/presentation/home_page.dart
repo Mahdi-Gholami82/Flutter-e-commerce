@@ -1,5 +1,6 @@
 import 'package:digi_meh/core/data/configs/constants.dart';
 import 'package:digi_meh/core/presentation/utils/default_image_loaders.dart';
+import 'package:digi_meh/core/presentation/widgets/default_shimmer_network_image.dart';
 import 'package:digi_meh/features/home/domain/entities/product_entity.dart';
 import 'package:digi_meh/features/home/domain/entities/product_list_entity.dart';
 import 'package:digi_meh/features/home/presentation/bloc/products_bloc.dart';
@@ -205,14 +206,13 @@ class _HomePageState extends State<HomePage> {
                                                 size: defaultImageSize,
                                                 child: Shimmer(
                                                   enable: true,
-                                                  child: Image.network(
-                                                    currentProduct!.thumbnail
-                                                        .toString(),
-                                                    frameBuilder:
-                                                        defaultImageFrameBuilder,
-                                                    loadingBuilder:
-                                                        defaultImageLoadingBuilder,
-                                                  ),
+                                                  child:
+                                                      DefaultShimmerNetworkImage(
+                                                        uriString:
+                                                            currentProduct!
+                                                                .thumbnail
+                                                                .toString(),
+                                                      ),
                                                 ),
                                               );
                                             },

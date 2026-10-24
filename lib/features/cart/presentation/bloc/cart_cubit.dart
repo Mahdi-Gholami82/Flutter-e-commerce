@@ -80,6 +80,5 @@ class CartCubit extends Cubit<CartCubitState> {
     final Set<CartItem> stateSet = state.items.toSet();
     stateSet.addAll(cartItems);
     emit(CartCubitState.fromItems(items: stateSet.toList()));
-    print("ADD ALL ${state.items.length}");
   }
 }
