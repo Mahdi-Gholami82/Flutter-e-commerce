@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 import 'package:digi_meh/core/domain/entities/product_categories.dart';
 
 class Product {
