@@ -1,5 +1,4 @@
 import 'package:digi_meh/core/data/configs/constants.dart';
-import 'package:digi_meh/core/presentation/utils/default_image_loaders.dart';
 import 'package:digi_meh/core/presentation/widgets/default_shimmer_network_image.dart';
 import 'package:digi_meh/core/presentation/widgets/item_counter.dart';
 import 'package:digi_meh/features/auth/presentation/bloc/auth_status_bloc.dart';

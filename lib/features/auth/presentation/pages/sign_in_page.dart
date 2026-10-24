@@ -53,6 +53,7 @@ class _SignInPageState extends State<SignInPage> {
         builder: (context, state) {
           bool loading = state is AuthStatusInProgress;
           return Scaffold(
+            appBar: AppBar(),
             body: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40),
               child: Column(
@@ -81,6 +82,7 @@ class _SignInPageState extends State<SignInPage> {
                       spacing: 20,
                       children: [
                         TextFormField(
+                          onFieldSubmitted: (_) => submit(context),
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: defaultBorderRadius,
@@ -97,9 +99,11 @@ class _SignInPageState extends State<SignInPage> {
                             } else if (!RegExp(r"\w+").hasMatch(value)) {
                               return "Invalid username";
                             }
+                            return null;
                           },
                         ),
                         TextFormField(
+                          onFieldSubmitted: (_) => submit(context),
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: defaultBorderRadius,
@@ -116,6 +120,7 @@ class _SignInPageState extends State<SignInPage> {
                             } else if (!RegExp(r"\w+").hasMatch(value)) {
                               return "Invalid passowrd";
                             }
+                            return null;
                           },
                         ),
                       ],
@@ -137,14 +142,7 @@ class _SignInPageState extends State<SignInPage> {
                       onPressed: loading
                           ? null
                           : () {
-                              if (Form.of(context).validate()) {
-                                BlocProvider.of<AuthBloc>(context).add(
-                                  AuthEventDoAuthenticate(
-                                    userName: userNameText,
-                                    password: passwordText,
-                                  ),
-                                );
-                              }
+                              submit(context);
                             },
                       child: loading
                           ? const SizedBox(
@@ -162,5 +160,13 @@ class _SignInPageState extends State<SignInPage> {
         },
       ),
     );
+  }
+
+  void submit(BuildContext context) {
+    if (Form.of(context).validate()) {
+      BlocProvider.of<AuthBloc>(context).add(
+        AuthEventDoAuthenticate(userName: userNameText, password: passwordText),
+      );
+    }
   }
 }

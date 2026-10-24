@@ -1,4 +1,3 @@
-import 'package:digi_meh/core/data/repositories/preferences_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 
@@ -29,9 +28,7 @@ class AuthStatusFailed extends AuthStatus {
 
 sealed class AuthEvent {}
 
-class AuthEventDoAuthenticateFromLocalToken extends AuthEvent {
-  AuthEventDoAuthenticateFromLocalToken();
-}
+class AuthEventDoAuthenticateFromLocalToken extends AuthEvent {}
 
 class AuthEventDoAuthenticate extends AuthEvent {
   final String userName;

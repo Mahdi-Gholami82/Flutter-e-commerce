@@ -1,5 +1,4 @@
 import 'package:collection/collection.dart';
-import 'package:digi_meh/core/presentation/utils/default_image_loaders.dart';
 import 'package:digi_meh/core/presentation/widgets/default_shimmer_network_image.dart';
 import 'package:digi_meh/features/cart/presentation/bloc/cart_cubit.dart';
 import 'package:digi_meh/features/home/domain/entities/product_entity.dart';
