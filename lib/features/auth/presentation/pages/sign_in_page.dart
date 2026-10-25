@@ -4,7 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SignInPage extends StatefulWidget {
   static const String route = "sign_in";
-  const SignInPage({super.key, required this.checkOutWhenDone});
+  const SignInPage({super.key, bool? checkOutWhenDone})
+    : checkOutWhenDone = checkOutWhenDone ?? false;
   final bool checkOutWhenDone;
 
   @override

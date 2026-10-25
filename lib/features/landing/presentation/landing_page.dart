@@ -7,6 +7,7 @@ import 'package:digi_meh/features/landing/presentation/widgets/custom_navigation
 import 'package:digi_meh/features/profile/presentation/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 
 class LandingPage extends StatefulWidget {
   static const String route = "/landing";
@@ -29,63 +30,65 @@ class _LandingPageState extends State<LandingPage> {
   // double mouseStartOffset = 0;
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => ProductsBloc()),
         BlocProvider(create: (_) => SearchProductsBloc()),
       ],
       child: Scaffold(
-        body: Stack(
-          children: [
-            GestureDetector(
-              // onPanStart: (details) {
-              //   mouseStartOffset = pageController.offset + details.localPosition.dx;
-              // },
-              // onPanUpdate: (details) {
-              //   var position = pageController.position;
-              //   double toOffset =
-              //       (pageController.offset +
-              //               (mouseStartOffset - details.localPosition.dx))
-              //           .clamp(0, position.maxScrollExtent);
-              //   pageController.jumpTo(toOffset);
-              // },
-              child: PageView(controller: pageController, children: children),
+        body: PersistentTabView(
+          backgroundColor: colorScheme.surfaceContainer,
+          tabs: [
+            PersistentTabConfig(
+              screen: HomePage(),
+              item: ItemConfig(
+                icon: Icon(Icons.home),
+                title: "Home",
+                activeForegroundColor: colorScheme.primary,
+              ),
             ),
-            Positioned.fill(
-              top: null,
-              child: CustomNavigationBar(
-                initialSelection: selectedPage,
-                onChanged: (index) {
-                  setState(() {
-                    selectedPage = index;
-                    pageController.animateToPage(
-                      selectedPage,
-                      duration: Duration(milliseconds: 200),
-                      curve: Curves.linear,
-                    );
-                  });
-                },
-                items: [
-                  CustomNavigationItem(
-                    icon: Icon(Icons.home),
-                    label: Text("Home"),
-                  ),
-                  CustomNavigationItem(
-                    icon: Icon(Icons.category),
-                    label: Text("Category"),
-                  ),
-                  CustomNavigationItem(
-                    icon: Icon(Icons.shopping_cart),
-                    label: Text("Cart"),
-                  ),
-                  CustomNavigationItem(
-                    icon: Icon(Icons.account_circle_rounded),
-                    label: Text("Profile"),
-                  ),
-                ],
+            PersistentTabConfig(
+              screen: CategoryPage(),
+              item: ItemConfig(
+                icon: Icon(Icons.category),
+                title: "Category",
+                activeForegroundColor: colorScheme.primary,
+              ),
+            ),
+            PersistentTabConfig(
+              screen: CartPage(),
+              item: ItemConfig(
+                icon: Icon(Icons.shopping_cart),
+                title: "Cart",
+                activeForegroundColor: colorScheme.primary,
+              ),
+            ),
+            PersistentTabConfig(
+              screen: ProfilePage(),
+              item: ItemConfig(
+                icon: Icon(Icons.account_circle_rounded),
+                title: "Profile",
+                activeForegroundColor: colorScheme.primary,
               ),
             ),
           ],
+          navBarBuilder: (navBarConfig) => Style2BottomNavBar(
+            navBarConfig: navBarConfig,
+            height: 60,
+            itemPadding: .symmetric(vertical: 7, horizontal: 5),
+            navBarDecoration: NavBarDecoration(
+              borderRadius: BorderRadius.circular(8),
+              color: colorScheme.surfaceContainer,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 10,
+                  spreadRadius: -4,
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

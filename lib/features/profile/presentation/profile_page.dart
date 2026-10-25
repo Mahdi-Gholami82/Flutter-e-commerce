@@ -2,6 +2,7 @@ import 'package:digi_meh/core/data/configs/constants.dart';
 import 'package:digi_meh/core/presentation/widgets/default_shimmer_network_image.dart';
 import 'package:digi_meh/features/auth/domain/entities/user_entity.dart';
 import 'package:digi_meh/features/auth/presentation/bloc/auth_status_bloc.dart';
+import 'package:digi_meh/features/auth/presentation/pages/sign_in_page.dart';
 import 'package:digi_meh/features/settings/presentation/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,6 +15,7 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
     final colorScheme = theme.colorScheme;
     return BlocBuilder<AuthBloc, AuthStatus>(
       builder: (context, state) {
@@ -55,21 +57,6 @@ class ProfilePage extends StatelessWidget {
                                           ),
                                   ),
                                 ),
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            top: 10,
-                            left: 10,
-                            child: IconButton(
-                              onPressed: () {
-                                Navigator.of(
-                                  context,
-                                ).pushNamed(SettingsPage.route);
-                              },
-                              icon: Icon(Icons.settings),
-                              style: IconButton.styleFrom(
-                                foregroundColor: colorScheme.onSecondary,
                               ),
                             ),
                           ),
@@ -125,6 +112,75 @@ class ProfilePage extends StatelessWidget {
                       ),
                     ),
                   ],
+                ),
+              ),
+              if (!loggedIn) ...[
+                Positioned.fill(
+                  child: const ModalBarrier(
+                    dismissible: false,
+                    color: Colors.black26,
+                  ),
+                ),
+                Positioned.fill(
+                  child: Center(
+                    child: Container(
+                      height: 180,
+                      padding: const .all(20),
+                      decoration: BoxDecoration(
+                        color: colorScheme.secondaryContainer,
+                        borderRadius: .circular(25),
+                        boxShadow: [BoxShadow(blurRadius: 4, spreadRadius: -3)],
+                      ),
+                      child: Column(
+                        mainAxisSize: .min,
+                        mainAxisAlignment: .spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Column(
+                              spacing: 20,
+                              children: [
+                                Text("Sign in", style: textTheme.titleLarge!),
+                                Text(
+                                  "Please Sign in to access your profile.",
+                                  style: textTheme.bodyMedium!,
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            width: 120,
+                            child: TextButton(
+                              onPressed: () {
+                                Navigator.of(
+                                  context,
+                                  rootNavigator: true,
+                                ).pushNamed(SignInPage.route);
+                              },
+                              style: TextButton.styleFrom(
+                                backgroundColor: colorScheme.primary,
+                                foregroundColor: colorScheme.onPrimary,
+                              ),
+                              child: Text("Ok"),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+              Positioned(
+                top: 10,
+                left: 10,
+                child: IconButton(
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(SettingsPage.route);
+                  },
+                  icon: Icon(Icons.settings),
+                  style: IconButton.styleFrom(
+                    foregroundColor: colorScheme.onSecondary,
+                  ),
                 ),
               ),
             ],

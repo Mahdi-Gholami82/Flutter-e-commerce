@@ -19,6 +19,7 @@ import 'package:digi_meh/features/product_view/presentation/product_view_page.da
 import 'package:digi_meh/features/settings/presentation/bloc/theme_mode_cubit.dart';
 import 'package:digi_meh/features/settings/presentation/settings_page.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -131,7 +132,7 @@ class DigiMehApp extends StatelessWidget {
                 SignInPage.route => MaterialPageRoute(
                   builder: (context) {
                     return SignInPage(
-                      checkOutWhenDone: settings.arguments as bool,
+                      checkOutWhenDone: settings.arguments as bool?,
                     );
                   },
                 ),

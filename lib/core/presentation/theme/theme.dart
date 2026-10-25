@@ -96,9 +96,9 @@ abstract final class AppTheme {
   static final ThemeData _light = ThemeData(
     useMaterial3: true,
     colorScheme: lightColorScheme,
-    scaffoldBackgroundColor: const Color(0xFFF4F4F5),
+    scaffoldBackgroundColor: const Color(0xFFF8F9FC),
     appBarTheme: const AppBarTheme(
-      backgroundColor: Color(0xFFF4F4F5),
+      backgroundColor: Color(0xFFF8F9FC),
       foregroundColor: Color(0xFF18181B),
       elevation: 0,
       scrolledUnderElevation: 0,
@@ -129,9 +129,9 @@ abstract final class AppTheme {
   static final ThemeData _dark = ThemeData(
     useMaterial3: true,
     colorScheme: darkColorScheme,
-    scaffoldBackgroundColor: const Color(0xFF09090B),
+    scaffoldBackgroundColor: const Color(0xFF141519),
     appBarTheme: const AppBarTheme(
-      backgroundColor: Color(0xFF09090B),
+      backgroundColor: Color(0xFF141519),
       foregroundColor: Color(0xFFFAFAFA),
       elevation: 0,
       scrolledUnderElevation: 0,

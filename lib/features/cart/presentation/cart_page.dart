@@ -283,6 +283,7 @@ class CartPage extends StatelessWidget {
                               } else {
                                 Navigator.of(
                                   context,
+                                  rootNavigator: true,
                                 ).pushNamed(SignInPage.route, arguments: true);
                               }
                             },

@@ -83,241 +83,250 @@ class _HomePageState extends State<HomePage> {
 
           return Shimmer(
             enable: !productsLoaded,
-            child: CustomScrollView(
-              controller: scrollController,
-              slivers: [
-                SliverPadding(
-                  padding: EdgeInsetsGeometry.all(10),
-                  sliver: SliverFloatingHeader(
-                    child:
-                        BlocConsumer<SearchProductsBloc, SearchProductsState>(
-                          listener:
-                              (
-                                BuildContext context,
-                                SearchProductsState productsSearchState,
-                              ) {
-                                if (productsSearchState
-                                    is SearchProductsLoaded) {
-                                  suggestions =
-                                      productsSearchState.result.products;
-                                } else {
-                                  suggestions = [];
-                                }
-                                _triggerSearchViewRebuild();
-                              },
-                          builder: (context, productsSearchState) {
-                            return SearchAnchor(
-                              searchController: searchController,
-                              viewOnChanged: (value) {
-                                final query = value.trim();
-                                if (query.isNotEmpty) {
-                                  BlocProvider.of<SearchProductsBloc>(
-                                    context,
-                                  ).add(SearchProducts(query: query));
-                                } else {
-                                  suggestions = [];
+            child: SafeArea(
+              child: CustomScrollView(
+                controller: scrollController,
+                slivers: [
+                  SliverPadding(
+                    padding: EdgeInsetsGeometry.all(10),
+                    sliver: SliverFloatingHeader(
+                      child:
+                          BlocConsumer<SearchProductsBloc, SearchProductsState>(
+                            listener:
+                                (
+                                  BuildContext context,
+                                  SearchProductsState productsSearchState,
+                                ) {
+                                  if (productsSearchState
+                                      is SearchProductsLoaded) {
+                                    suggestions =
+                                        productsSearchState.result.products;
+                                  } else {
+                                    suggestions = [];
+                                  }
                                   _triggerSearchViewRebuild();
-                                }
-                              },
-                              builder: (context, controller) => SearchBar(
-                                hintText: "Search products...",
-                                onTap: () {
-                                  searchController.openView();
                                 },
-                                controller: controller,
-                                leading: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Icon(Icons.search),
-                                ),
-                              ),
-                              suggestionsBuilder: (context, controller) {
-                                return suggestions.map(
-                                  (product) => ListTile(
-                                    title: Text(product.title),
-                                    onTap: () async {
-                                      await Navigator.of(context).pushNamed(
-                                        ProductViewPage.route,
-                                        arguments: product,
-                                      );
-                                      controller.closeView("");
-                                    },
+                            builder: (context, productsSearchState) {
+                              return SearchAnchor(
+                                searchController: searchController,
+                                viewOnChanged: (value) {
+                                  final query = value.trim();
+                                  if (query.isNotEmpty) {
+                                    BlocProvider.of<SearchProductsBloc>(
+                                      context,
+                                    ).add(SearchProducts(query: query));
+                                  } else {
+                                    suggestions = [];
+                                    _triggerSearchViewRebuild();
+                                  }
+                                },
+                                builder: (context, controller) => SearchBar(
+                                  hintText: "Search products...",
+                                  onTap: () {
+                                    searchController.openView();
+                                  },
+                                  controller: controller,
+                                  leading: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Icon(Icons.search),
                                   ),
-                                );
-                              },
-                            );
-                          },
-                        ),
+                                ),
+                                suggestionsBuilder: (context, controller) {
+                                  return suggestions.map(
+                                    (product) => ListTile(
+                                      title: Text(product.title),
+                                      onTap: () async {
+                                        await Navigator.of(context).pushNamed(
+                                          ProductViewPage.route,
+                                          arguments: product,
+                                        );
+                                        controller.closeView("");
+                                      },
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                    ),
                   ),
-                ),
-                SliverPadding(
-                  padding: EdgeInsetsGeometry.all(10),
-                  sliver: SliverToBoxAdapter(
-                    child: Card(
-                      child: SizedBox(
-                        width: 400,
-                        height: 300,
-                        child: Center(
-                          child: Text(
-                            "MEH BANNER",
-                            style: TextStyle(fontSize: 20),
+                  SliverPadding(
+                    padding: EdgeInsetsGeometry.all(10),
+                    sliver: SliverToBoxAdapter(
+                      child: Card(
+                        child: SizedBox(
+                          width: 400,
+                          height: 300,
+                          child: Center(
+                            child: Text(
+                              "MEH BANNER",
+                              style: TextStyle(fontSize: 20),
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                SliverPadding(
-                  padding: EdgeInsetsGeometry.symmetric(horizontal: 20),
-                  sliver: SliverGrid(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        Product? currentProduct =
-                            loadedState?.result.products[index];
-                        final border = BorderRadius.circular(15);
-                        return Stack(
-                          children: [
-                            Material(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: border,
-                                side: BorderSide(
-                                  color: colorScheme.outlineVariant,
-                                ),
-                              ),
-
-                              child: Ink(
-                                child: InkWell(
-                                  customBorder: RoundedRectangleBorder(
-                                    borderRadius: border,
+                  SliverPadding(
+                    padding: EdgeInsetsGeometry.symmetric(horizontal: 20),
+                    sliver: SliverGrid(
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                          Product? currentProduct =
+                              loadedState?.result.products[index];
+                          final border = BorderRadius.circular(15);
+                          return Stack(
+                            children: [
+                              Material(
+                                color: colorScheme.surfaceContainer,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: border,
+                                  side: BorderSide(
+                                    color: colorScheme.outlineVariant,
                                   ),
-                                  onTap: () {
-                                    if (currentProduct != null) {
-                                      Navigator.of(context).pushNamed(
-                                        ProductViewPage.route,
-                                        arguments: currentProduct,
-                                      );
-                                    }
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Flexible(
-                                          child: ShimmerBuilder(
-                                            childBuilder: (context) {
-                                              return SizedBox.fromSize(
-                                                size: defaultImageSize,
-                                                child: Shimmer(
-                                                  enable: true,
-                                                  child:
-                                                      DefaultShimmerNetworkImage(
-                                                        uriString:
-                                                            currentProduct!
-                                                                .thumbnail
-                                                                .toString(),
-                                                      ),
-                                                ),
-                                              );
-                                            },
-                                            sampleBuilder: (context) =>
-                                                SizedBox.fromSize(
+                                ),
+
+                                child: Ink(
+                                  child: InkWell(
+                                    customBorder: RoundedRectangleBorder(
+                                      borderRadius: border,
+                                    ),
+                                    onTap: () {
+                                      if (currentProduct != null) {
+                                        Navigator.of(context).pushNamed(
+                                          ProductViewPage.route,
+                                          arguments: currentProduct,
+                                        );
+                                      }
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Flexible(
+                                            child: ShimmerBuilder(
+                                              childBuilder: (context) {
+                                                return SizedBox.fromSize(
                                                   size: defaultImageSize,
-                                                ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(8),
-                                          child: ShimmerPaintOver(
-                                            child: Text(
-                                              productsLoaded
-                                                  ? currentProduct!.title
-                                                  : "sample txt",
-                                              style: TextStyle(
-                                                overflow: TextOverflow.ellipsis,
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w400,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        FittedBox(
-                                          child: ShimmerPaintOver(
-                                            child: Text(
-                                              "${productsLoaded ? currentProduct!.price : "11.29"} \$",
-                                              style:
-                                                  theme.textTheme.titleSmall ??
-                                                  TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.w500,
-                                                    color:
-                                                        colorScheme.onSurface,
+                                                  child: Shimmer(
+                                                    enable: true,
+                                                    child:
+                                                        DefaultShimmerNetworkImage(
+                                                          uriString:
+                                                              currentProduct!
+                                                                  .thumbnail
+                                                                  .toString(),
+                                                        ),
+                                                  ),
+                                                );
+                                              },
+                                              sampleBuilder: (context) =>
+                                                  SizedBox.fromSize(
+                                                    size: defaultImageSize,
                                                   ),
                                             ),
                                           ),
-                                        ),
-                                      ],
+                                          Padding(
+                                            padding: const EdgeInsets.all(8),
+                                            child: ShimmerPaintOver(
+                                              child: Text(
+                                                productsLoaded
+                                                    ? currentProduct!.title
+                                                    : "sample txt",
+                                                style: TextStyle(
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          FittedBox(
+                                            child: ShimmerPaintOver(
+                                              child: Text(
+                                                "${productsLoaded ? currentProduct!.price : "11.29"} \$",
+                                                style:
+                                                    theme
+                                                        .textTheme
+                                                        .titleSmall ??
+                                                    TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color:
+                                                          colorScheme.onSurface,
+                                                    ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                            if (productsLoaded &&
-                                currentProduct!.discountPercentage != 0)
-                              Positioned(
-                                top: 10,
-                                left: 10,
-                                child: Container(
-                                  padding: EdgeInsets.all(2),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    color: colorScheme.tertiary,
-                                  ),
-                                  child: Text(
-                                    style: TextStyle(
-                                      color: colorScheme.onTertiary,
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w700,
+                              if (productsLoaded &&
+                                  currentProduct!.discountPercentage != 0)
+                                Positioned(
+                                  top: 10,
+                                  left: 10,
+                                  child: Container(
+                                    padding: EdgeInsets.all(2),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      color: colorScheme.tertiary,
                                     ),
-                                    "${currentProduct.discountPercentage.toStringAsFixed(1)} %",
+                                    child: Text(
+                                      style: TextStyle(
+                                        color: colorScheme.onTertiary,
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                      "${currentProduct.discountPercentage.toStringAsFixed(1)} %",
+                                    ),
                                   ),
                                 ),
-                              ),
-                          ],
-                        );
-                      },
-                      childCount: productsLoaded
-                          ? productsList!.products.length
-                          : productsListPaginationLimit,
-                    ),
-                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                      mainAxisSpacing: 10,
-                      crossAxisSpacing: 10,
-                      maxCrossAxisExtent: 150,
-                      mainAxisExtent: 175,
-                    ),
-                  ),
-                ),
-                if (productsLoaded && productsList!.page.totalPages > 0)
-                  SliverPadding(
-                    padding: EdgeInsetsGeometry.directional(
-                      top: 20,
-                      bottom: 10,
-                    ),
-                    sliver: SliverToBoxAdapter(
-                      child: PaginationSelector(
-                        numberOfOptions: 5,
-                        maxPage: productsLoaded
-                            ? productsList.page.totalPages - 1
-                            : 10,
-                        selected: productsLoaded ? productsList.page.number : 1,
-                        onTap: ({required int pageIndex}) {
-                          getProducts(context, pageIndex);
+                            ],
+                          );
                         },
+                        childCount: productsLoaded
+                            ? productsList!.products.length
+                            : productsListPaginationLimit,
+                      ),
+                      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                        mainAxisSpacing: 10,
+                        crossAxisSpacing: 10,
+                        maxCrossAxisExtent: 150,
+                        mainAxisExtent: 175,
                       ),
                     ),
                   ),
-              ],
+                  if (productsLoaded && productsList!.page.totalPages > 0)
+                    SliverPadding(
+                      padding: EdgeInsetsGeometry.directional(
+                        top: 20,
+                        bottom: 10,
+                      ),
+                      sliver: SliverToBoxAdapter(
+                        child: PaginationSelector(
+                          numberOfOptions: 5,
+                          maxPage: productsLoaded
+                              ? productsList.page.totalPages - 1
+                              : 10,
+                          selected: productsLoaded
+                              ? productsList.page.number
+                              : 1,
+                          onTap: ({required int pageIndex}) {
+                            getProducts(context, pageIndex);
+                          },
+                        ),
+                      ),
+                    ),
+                ],
+              ),
             ),
           );
         },

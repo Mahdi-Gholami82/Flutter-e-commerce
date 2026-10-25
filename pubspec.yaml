@@ -45,6 +45,7 @@ dependencies:
   flutter_bloc: ^9.1.1
   stream_transform: ^2.1.2
   flutter_secure_storage: ^11.2.0
+  persistent_bottom_nav_bar_v2: ^6.5.0
 
 dev_dependencies:
   flutter_test:
