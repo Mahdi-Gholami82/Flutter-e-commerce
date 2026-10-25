@@ -1,14 +1,12 @@
 import 'package:digi_meh/features/auth/data/models/address_model.dart';
 import 'package:digi_meh/features/auth/data/models/auth_tokens_model.dart';
 import 'package:digi_meh/features/auth/data/models/sign_in_user_model.dart';
-import 'package:digi_meh/features/auth/data/models/sign_up_user_model.dart';
 import 'package:digi_meh/features/auth/data/models/user_model.dart';
 import 'package:digi_meh/features/auth/data/sources/auth_data_source.dart';
 import 'package:digi_meh/features/auth/domain/entities/address_entity.dart';
 import 'package:digi_meh/features/auth/domain/entities/auth_token_entity.dart';
 import 'package:digi_meh/features/auth/domain/entities/coordinates_entity.dart';
 import 'package:digi_meh/features/auth/domain/entities/user_entity.dart';
-import 'package:flutter/material.dart';
 
 abstract class AuthRepository {
   Future<AuthTokens> login({

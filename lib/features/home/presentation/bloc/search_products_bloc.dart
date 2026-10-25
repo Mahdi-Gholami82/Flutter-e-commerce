@@ -1,4 +1,5 @@
 import 'package:digi_meh/features/home/domain/use_cases/get_products_use_case.dart';
+import 'package:digi_meh/features/home/domain/use_cases/search_products_use_case.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:digi_meh/features/home/domain/entities/product_list_entity.dart';

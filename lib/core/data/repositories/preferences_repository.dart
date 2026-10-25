@@ -2,7 +2,9 @@ import 'package:digi_meh/core/data/sources/preferences_data_source.dart';
 import 'package:digi_meh/features/cart/data/models/cart_item_model.dart';
 import 'package:digi_meh/features/cart/domain/entities/cart_item_entity.dart';
 import 'package:digi_meh/features/home/data/repositories/products_repository.dart';
+import 'package:digi_meh/features/home/domain/use_cases/get_single_product_use_case.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 
 abstract class PreferencesRepository {
   List<Future<CartItem>> getCartItems();
@@ -25,7 +27,7 @@ class PreferencesRepositoryImpl extends PreferencesRepository {
     return cartItemPrefs
         .map(
           (e) async => CartItem(
-            product: await productsRepository.getSingleProuduct(
+            product: await GetIt.instance<GetSingleProductUseCase>().execute(
               id: e.productId,
             ),
             numberOfItem: e.numberOfItems,

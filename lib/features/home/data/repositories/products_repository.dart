@@ -9,7 +9,7 @@ import 'package:digi_meh/features/home/domain/entities/product_list_entity.dart'
 abstract class ProductsRepository {
   Future<ProductsList> getProducts({required int pageNumber});
   Future<ProductsList> searchProducts({required String query});
-  Future<Product> getSingleProuduct({required int id});
+  Future<Product> getSingleProduct({required int id});
 }
 
 class ProductsRepositoryImpl extends ProductsRepository {
@@ -61,7 +61,7 @@ class ProductsRepositoryImpl extends ProductsRepository {
   }
 
   @override
-  Future<Product> getSingleProuduct({required int id}) async {
+  Future<Product> getSingleProduct({required int id}) async {
     return _fromProductModel(await dataSource.getSingleProuduct(id: id));
   }
 }

@@ -1,7 +1,8 @@
 import 'package:digi_meh/core/data/configs/api_config.dart';
 import 'package:digi_meh/core/data/repositories/preferences_repository.dart';
 import 'package:digi_meh/core/data/sources/preferences_data_source.dart';
-import 'package:digi_meh/core/domain/use_cases/refresh_token_storage_use_case.dart';
+import 'package:digi_meh/core/domain/use_cases/load_refresh_token_storage_use_case.dart';
+import 'package:digi_meh/core/domain/use_cases/save_refresh_token_storage_use_case.dart';
 import 'package:digi_meh/core/presentation/theme/theme.dart';
 import 'package:digi_meh/features/auth/data/repositories/auth_repository.dart';
 import 'package:digi_meh/features/auth/data/repositories/secure_storage_repository.dart';
@@ -19,6 +20,8 @@ import 'package:digi_meh/features/home/data/repositories/products_repository.dar
 import 'package:digi_meh/features/home/data/sources/products_source.dart';
 import 'package:digi_meh/features/home/domain/entities/product_entity.dart';
 import 'package:digi_meh/features/home/domain/use_cases/get_products_use_case.dart';
+import 'package:digi_meh/features/home/domain/use_cases/get_single_product_use_case.dart';
+import 'package:digi_meh/features/home/domain/use_cases/search_products_use_case.dart';
 import 'package:digi_meh/features/landing/presentation/landing_page.dart';
 import 'package:digi_meh/features/product_view/presentation/product_view_page.dart';
 import 'package:digi_meh/features/settings/presentation/bloc/theme_mode_cubit.dart';
@@ -54,6 +57,11 @@ Future<void> configureDependencies() async {
   getIt.registerLazySingleton<ProductsRepository>(
     () => ProductsRepositoryImpl(dataSource: getIt()),
   );
+  getIt.registerLazySingleton(() => GetProductsUseCase(repository: getIt()));
+  getIt.registerLazySingleton(() => SearchProductsUseCase(repository: getIt()));
+  getIt.registerLazySingleton(
+    () => GetSingleProductUseCase(repository: getIt()),
+  );
 
   //prefs repo
   getIt.registerLazySingleton<PreferencesDataSource>(
@@ -66,9 +74,6 @@ Future<void> configureDependencies() async {
     ),
   );
 
-  getIt.registerLazySingleton(() => GetProductsUseCase(repository: getIt()));
-  getIt.registerLazySingleton(() => SearchProductsUseCase(repository: getIt()));
-
   // secure storage
   getIt.registerSingleton(FlutterSecureStorage());
   getIt.registerLazySingleton<SecureStorageSource>(
@@ -77,6 +82,12 @@ Future<void> configureDependencies() async {
   getIt.registerLazySingleton<SecureStorageRepository>(
     () => SecureStorageRepositoryImpl(dataSource: getIt()),
   );
+  getIt.registerLazySingleton(
+    () => LoadRefreshTokenStorageUseCase(secureStorageRepository: getIt()),
+  );
+  getIt.registerLazySingleton(
+    () => SaveRefreshTokenStorageUseCase(secureStorageRepository: getIt()),
+  );
 
   // auth
   getIt.registerLazySingleton<AuthDataSource>(
@@ -84,12 +95,6 @@ Future<void> configureDependencies() async {
   );
   getIt.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(dataSource: getIt()),
-  );
-  getIt.registerLazySingleton(
-    () => LoadRefreshTokenStorageUseCase(secureStorageRepository: getIt()),
-  );
-  getIt.registerLazySingleton(
-    () => SaveRefreshTokenStorageUseCase(secureStorageRepository: getIt()),
   );
   getIt.registerLazySingleton(() => GetAuthUserUseCase(getIt()));
   getIt.registerLazySingleton(() => SignUpUseCase(getIt()));
