@@ -1,3 +1,4 @@
+import 'package:digi_meh/core/presentation/widgets/custom_animated_borrom_insets.dart';
 import 'package:digi_meh/features/auth/presentation/bloc/auth_status_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,8 +22,6 @@ class _SignInPageState extends State<SignInPage> {
     var theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final defaultBorderRadius = BorderRadius.circular(10);
-    print(MediaQuery.viewInsetsOf(context).bottom);
-
     return Form(
       child: BlocConsumer<AuthBloc, AuthStatus>(
         listener: (context, state) {
@@ -57,16 +56,11 @@ class _SignInPageState extends State<SignInPage> {
           return Scaffold(
             resizeToAvoidBottomInset: false,
             appBar: AppBar(),
-            body: AnimatedPadding(
-              duration: const Duration(milliseconds: 50),
-              curve: Curves.easeOut,
-              padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom,
-              ),
+            body: CustomAnimatedBottomInsets(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 40),
                 child: Column(
-                  mainAxisAlignment: .start,
+                  mainAxisAlignment: .center,
                   crossAxisAlignment: .center,
                   children: [
                     Flexible(
@@ -181,7 +175,7 @@ class _SignInPageState extends State<SignInPage> {
                             : Text("Sign In"),
                       ),
                     ),
-                    SizedBox(height: 24),
+                    Flexible(child: FittedBox(child: SizedBox(height: 150))),
                   ],
                 ),
               ),
