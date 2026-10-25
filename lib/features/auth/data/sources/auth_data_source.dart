@@ -27,17 +27,17 @@ abstract class AuthDataSource {
 }
 
 class AuthDataSourceImpl extends AuthDataSource {
-  AuthDataSourceImpl({required this.apiConfig, required this.dio});
-  ECommerceApiConfig apiConfig;
-  Dio dio;
+  AuthDataSourceImpl({required this._apiConfig, required this._dio});
+  final ECommerceApiConfig _apiConfig;
+  final Dio _dio;
   @override
   Future<SignInUserModel> signIn({
     required String username,
     required String password,
   }) async {
-    final uri = apiConfig.uri("/auth/login");
+    final uri = _apiConfig.uri("/auth/login");
     debugPrint("POST : $uri");
-    final result = await dio.postUri(
+    final result = await _dio.postUri(
       uri,
       data: jsonEncode({"username": username, "password": password}),
     );
@@ -47,9 +47,9 @@ class AuthDataSourceImpl extends AuthDataSource {
 
   @override
   Future<UserModel> getAuthUser({required String accessToken}) async {
-    final uri = apiConfig.uri("/auth/me");
+    final uri = _apiConfig.uri("/auth/me");
     debugPrint("GET : $uri");
-    final result = await dio.getUri(
+    final result = await _dio.getUri(
       uri,
       options: Options(
         headers: {
@@ -66,9 +66,9 @@ class AuthDataSourceImpl extends AuthDataSource {
   Future<AuthTokensModel> refreshAuthSession({
     required String refreshToken,
   }) async {
-    final uri = apiConfig.uri("/auth/me");
+    final uri = _apiConfig.uri("/auth/me");
     debugPrint("POST : $uri");
-    final result = await dio.postUri(
+    final result = await _dio.postUri(
       uri,
       data: jsonEncode({"refreshToken": refreshToken}),
     );
@@ -85,9 +85,9 @@ class AuthDataSourceImpl extends AuthDataSource {
     required String email,
     required String phone,
   }) async {
-    final uri = apiConfig.uri("/users/add");
+    final uri = _apiConfig.uri("/users/add");
     debugPrint("POST : $uri");
-    final result = await dio.postUri(
+    final result = await _dio.postUri(
       uri,
       data: jsonEncode({
         "username": username,

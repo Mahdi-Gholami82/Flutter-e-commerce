@@ -6,12 +6,12 @@ abstract class SecureStorageSource {
 }
 
 class SecureStorageSourceImpl extends SecureStorageSource {
-  FlutterSecureStorage secureStorage;
-  SecureStorageSourceImpl({required this.secureStorage});
+  final FlutterSecureStorage _secureStorage;
+  SecureStorageSourceImpl({required this._secureStorage});
   @override
   Future<void> saveRefreshToken(String refreshToken) =>
-      secureStorage.write(key: "refreshToken", value: refreshToken);
+      _secureStorage.write(key: "refreshToken", value: refreshToken);
 
   @override
-  Future<String?> getRefreshToken() => secureStorage.read(key: "refreshToken");
+  Future<String?> getRefreshToken() => _secureStorage.read(key: "refreshToken");
 }

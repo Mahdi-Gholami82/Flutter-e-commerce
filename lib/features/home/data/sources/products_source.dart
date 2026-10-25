@@ -18,16 +18,16 @@ abstract class ProductsSource {
 }
 
 class ProductsSourceImpl extends ProductsSource {
-  ProductsSourceImpl({required this.dio, required this.apiConfig});
-  final Dio dio;
-  final ECommerceApiConfig apiConfig;
+  ProductsSourceImpl({required this._dio, required this._apiConfig});
+  final Dio _dio;
+  final ECommerceApiConfig _apiConfig;
 
   @override
   Future<ProductsListModel> getProducts({
     required int limit,
     required int skip,
   }) async {
-    final uri = apiConfig.uri(
+    final uri = _apiConfig.uri(
       "/products",
       queryParameters: {
         "limit": limit.toString(),
@@ -36,14 +36,14 @@ class ProductsSourceImpl extends ProductsSource {
       },
     );
     debugPrint("GET: $uri");
-    Response<dynamic> response = await dio.getUri(uri);
+    Response<dynamic> response = await _dio.getUri(uri);
     Map<String, dynamic> json = response.data;
     return ProductsListModel.fromJson(json);
   }
 
   @override
   Future<ProductsListModel> searchProducts({required String query}) async {
-    final uri = apiConfig.uri(
+    final uri = _apiConfig.uri(
       "/products/search",
       queryParameters: {
         "q": query,
@@ -52,16 +52,16 @@ class ProductsSourceImpl extends ProductsSource {
       },
     );
     debugPrint("GET: $uri");
-    Response<dynamic> response = await dio.getUri(uri);
+    Response<dynamic> response = await _dio.getUri(uri);
     Map<String, dynamic> json = response.data;
     return ProductsListModel.fromJson(json);
   }
 
   @override
   Future<ProductModel> getSingleProuduct({required int id}) async {
-    final uri = apiConfig.uri("/products/$id");
+    final uri = _apiConfig.uri("/products/$id");
     debugPrint("GET: $uri");
-    Response<dynamic> response = await dio.getUri(uri);
+    Response<dynamic> response = await _dio.getUri(uri);
     Map<String, dynamic> json = response.data;
     return ProductModel.fromJson(json);
   }

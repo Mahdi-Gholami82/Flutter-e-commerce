@@ -12,11 +12,11 @@ abstract class PreferencesDataSource {
 }
 
 class PreferencesDataSourceImpl extends PreferencesDataSource {
-  PreferencesDataSourceImpl({required this.prefs});
-  final SharedPreferences prefs;
+  PreferencesDataSourceImpl({required this._prefs});
+  final SharedPreferences _prefs;
   @override
   List<CartItemModel> getCartItems() {
-    return prefs
+    return _prefs
             .getStringList("cartItemList")
             ?.map((e) => CartItemModel.fromJson(jsonDecode(e)))
             .toList() ??
@@ -25,16 +25,16 @@ class PreferencesDataSourceImpl extends PreferencesDataSource {
 
   @override
   void saveCartItems(List<CartItemModel> items) {
-    prefs.setStringList(
+    _prefs.setStringList(
       "cartItemList",
       items.map((e) => jsonEncode(e.toJson())).toList(),
     );
   }
 
   @override
-  String? getThemeMode() => prefs.getString("themeMode");
+  String? getThemeMode() => _prefs.getString("themeMode");
 
   @override
   Future<void> saveThemeMode(String value) =>
-      prefs.setString("themeMode", value);
+      _prefs.setString("themeMode", value);
 }
