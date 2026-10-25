@@ -122,6 +122,7 @@ class ProfilePage extends StatelessWidget {
                   ),
                 ),
                 Positioned.fill(
+                  top: 40,
                   child: Center(
                     child: Container(
                       height: 180,

@@ -18,14 +18,6 @@ class LandingPage extends StatefulWidget {
 }
 
 class _LandingPageState extends State<LandingPage> {
-  int selectedPage = 0;
-  final List<Widget> children = [
-    HomePage(),
-    CategoryPage(),
-    CartPage(),
-    ProfilePage(),
-  ];
-  final pageController = PageController();
   // final double offset = 100;
   // double mouseStartOffset = 0;
   @override
@@ -36,58 +28,56 @@ class _LandingPageState extends State<LandingPage> {
         BlocProvider(create: (_) => ProductsBloc()),
         BlocProvider(create: (_) => SearchProductsBloc()),
       ],
-      child: Scaffold(
-        body: PersistentTabView(
-          backgroundColor: colorScheme.surfaceContainer,
-          tabs: [
-            PersistentTabConfig(
-              screen: HomePage(),
-              item: ItemConfig(
-                icon: Icon(Icons.home),
-                title: "Home",
-                activeForegroundColor: colorScheme.primary,
+      child: PersistentTabView(
+        backgroundColor: colorScheme.surfaceContainer,
+        tabs: [
+          PersistentTabConfig(
+            screen: HomePage(),
+            item: ItemConfig(
+              icon: Icon(Icons.home),
+              title: "Home",
+              activeForegroundColor: colorScheme.primary,
+            ),
+          ),
+          PersistentTabConfig(
+            screen: CategoryPage(),
+            item: ItemConfig(
+              icon: Icon(Icons.category),
+              title: "Category",
+              activeForegroundColor: colorScheme.primary,
+            ),
+          ),
+          PersistentTabConfig(
+            screen: CartPage(),
+            item: ItemConfig(
+              icon: Icon(Icons.shopping_cart),
+              title: "Cart",
+              activeForegroundColor: colorScheme.primary,
+            ),
+          ),
+          PersistentTabConfig(
+            screen: ProfilePage(),
+            item: ItemConfig(
+              icon: Icon(Icons.account_circle_rounded),
+              title: "Profile",
+              activeForegroundColor: colorScheme.primary,
+            ),
+          ),
+        ],
+        navBarBuilder: (navBarConfig) => Style2BottomNavBar(
+          navBarConfig: navBarConfig,
+          height: 60,
+          itemPadding: .symmetric(vertical: 7, horizontal: 5),
+          navBarDecoration: NavBarDecoration(
+            borderRadius: BorderRadius.circular(8),
+            color: colorScheme.surfaceContainer,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black26,
+                blurRadius: 10,
+                spreadRadius: -4,
               ),
-            ),
-            PersistentTabConfig(
-              screen: CategoryPage(),
-              item: ItemConfig(
-                icon: Icon(Icons.category),
-                title: "Category",
-                activeForegroundColor: colorScheme.primary,
-              ),
-            ),
-            PersistentTabConfig(
-              screen: CartPage(),
-              item: ItemConfig(
-                icon: Icon(Icons.shopping_cart),
-                title: "Cart",
-                activeForegroundColor: colorScheme.primary,
-              ),
-            ),
-            PersistentTabConfig(
-              screen: ProfilePage(),
-              item: ItemConfig(
-                icon: Icon(Icons.account_circle_rounded),
-                title: "Profile",
-                activeForegroundColor: colorScheme.primary,
-              ),
-            ),
-          ],
-          navBarBuilder: (navBarConfig) => Style2BottomNavBar(
-            navBarConfig: navBarConfig,
-            height: 60,
-            itemPadding: .symmetric(vertical: 7, horizontal: 5),
-            navBarDecoration: NavBarDecoration(
-              borderRadius: BorderRadius.circular(8),
-              color: colorScheme.surfaceContainer,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black26,
-                  blurRadius: 10,
-                  spreadRadius: -4,
-                ),
-              ],
-            ),
+            ],
           ),
         ),
       ),

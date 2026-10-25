@@ -62,7 +62,9 @@ class _HomePageState extends State<HomePage> {
               }
             case ProductsLoading _:
               {
-                scrollController.jumpTo(0);
+                if (scrollController.position.hasContentDimensions) {
+                  scrollController.jumpTo(0);
+                }
               }
             case ProductsLoaded loaded:
               {
