@@ -38,14 +38,14 @@ class _LandingPageState extends State<LandingPage> {
               activeForegroundColor: colorScheme.primary,
             ),
           ),
-          PersistentTabConfig(
-            screen: CategoryPage(),
-            item: ItemConfig(
-              icon: Icon(Icons.category),
-              title: "Category",
-              activeForegroundColor: colorScheme.primary,
-            ),
-          ),
+          // PersistentTabConfig(
+          //   screen: CategoryPage(),
+          //   item: ItemConfig(
+          //     icon: Icon(Icons.category),
+          //     title: "Category",
+          //     activeForegroundColor: colorScheme.primary,
+          //   ),
+          // ),
           PersistentTabConfig(
             screen: CartPage(),
             item: ItemConfig(

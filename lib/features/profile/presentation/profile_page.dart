@@ -108,6 +108,138 @@ class ProfilePage extends StatelessWidget {
                               style: TextStyle(fontSize: 12),
                             ),
                           ),
+                          SizedBox(height: 70),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 20),
+                            child: SizedBox(
+                              width: 260,
+                              child: Card(
+                                child: Column(
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsetsGeometry.directional(
+                                        top: 10,
+                                        start: 10,
+                                      ),
+                                      child: Align(
+                                        alignment: .topStart,
+                                        child: Icon(
+                                          Icons.location_on,
+                                          color: colorScheme.outline,
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 20,
+                                        horizontal: 10,
+                                      ),
+                                      child: ShimmerPaintOver(
+                                        child: Column(
+                                          children: [
+                                            Text(
+                                              loggedIn
+                                                  ? user.address.location
+                                                  : "some location i dont know",
+                                              style: theme.textTheme.titleSmall,
+                                            ),
+                                            Text(
+                                              loggedIn
+                                                  ? "${user.address.country} ${user.address.city}"
+                                                  : "some location i dont know ssss",
+                                              style: theme.textTheme.bodyMedium,
+                                            ),
+                                            Text(
+                                              loggedIn
+                                                  ? user.address.postalCode
+                                                  : "421824",
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(20),
+                            child: SizedBox(
+                              width: double.infinity,
+                              height: 250,
+                              child: Card(
+                                child: Stack(
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment: .start,
+                                      mainAxisAlignment: .start,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.shopping_bag,
+                                                color: colorScheme.outline,
+                                              ),
+                                              Text(
+                                                "Orders",
+                                                style: theme
+                                                    .textTheme
+                                                    .titleLarge!
+                                                    .copyWith(
+                                                      color:
+                                                          colorScheme.outline,
+                                                    ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        // THE API DOESNT PROVIDE ANY
+                                        if (!loggedIn)
+                                          Expanded(
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(
+                                                8.0,
+                                              ),
+                                              child: ListView.builder(
+                                                scrollDirection: .horizontal,
+                                                itemCount: 4,
+                                                itemBuilder: (context, index) =>
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                            10,
+                                                          ),
+                                                      child: ShimmerPaintOver(
+                                                        child: SizedBox(
+                                                          height:
+                                                              double.infinity,
+                                                          width: 150,
+                                                        ),
+                                                      ),
+                                                    ),
+                                              ),
+                                            ),
+                                          ),
+                                      ],
+                                    ),
+                                    if (loggedIn)
+                                      Center(
+                                        child: Text(
+                                          "Nothing!",
+                                          style: theme.textTheme.titleSmall!
+                                              .copyWith(
+                                                color: colorScheme.outline,
+                                              ),
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -128,7 +260,7 @@ class ProfilePage extends StatelessWidget {
                       height: 180,
                       padding: const .all(20),
                       decoration: BoxDecoration(
-                        color: colorScheme.secondaryContainer,
+                        color: colorScheme.surfaceContainerHigh,
                         borderRadius: .circular(25),
                         boxShadow: [BoxShadow(blurRadius: 4, spreadRadius: -3)],
                       ),
@@ -180,7 +312,8 @@ class ProfilePage extends StatelessWidget {
                   },
                   icon: Icon(Icons.settings),
                   style: IconButton.styleFrom(
-                    foregroundColor: colorScheme.onSecondary,
+                    foregroundColor: colorScheme.onSurface,
+                    backgroundColor: colorScheme.surfaceContainer,
                   ),
                 ),
               ),
