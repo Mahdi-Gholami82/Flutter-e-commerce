@@ -86,92 +86,94 @@ class _HomePageState extends State<HomePage> {
           return Shimmer(
             enable: !productsLoaded,
             child: SafeArea(
-              child: CustomScrollView(
-                controller: scrollController,
-                slivers: [
-                  SliverPadding(
-                    padding: EdgeInsetsGeometry.all(10),
-                    sliver: SliverFloatingHeader(
-                      child:
-                          BlocConsumer<SearchProductsBloc, SearchProductsState>(
-                            listener:
-                                (
-                                  BuildContext context,
-                                  SearchProductsState productsSearchState,
-                                ) {
-                                  if (productsSearchState
-                                      is SearchProductsLoaded) {
-                                    suggestions =
-                                        productsSearchState.result.products;
-                                  } else {
-                                    suggestions = [];
-                                  }
-                                  _triggerSearchViewRebuild();
-                                },
-                            builder: (context, productsSearchState) {
-                              return SearchAnchor(
-                                searchController: searchController,
-                                viewOnChanged: (value) {
-                                  final query = value.trim();
-                                  if (query.isNotEmpty) {
-                                    BlocProvider.of<SearchProductsBloc>(
-                                      context,
-                                    ).add(SearchProducts(query: query));
-                                  } else {
-                                    suggestions = [];
+              child: Padding(
+                padding: EdgeInsetsGeometry.symmetric(horizontal: 20),
+                child: CustomScrollView(
+                  controller: scrollController,
+                  slivers: [
+                    SliverPadding(
+                      padding: EdgeInsetsGeometry.all(10),
+                      sliver: SliverFloatingHeader(
+                        child:
+                            BlocConsumer<
+                              SearchProductsBloc,
+                              SearchProductsState
+                            >(
+                              listener:
+                                  (
+                                    BuildContext context,
+                                    SearchProductsState productsSearchState,
+                                  ) {
+                                    if (productsSearchState
+                                        is SearchProductsLoaded) {
+                                      suggestions =
+                                          productsSearchState.result.products;
+                                    } else {
+                                      suggestions = [];
+                                    }
                                     _triggerSearchViewRebuild();
-                                  }
-                                },
-                                builder: (context, controller) => SearchBar(
-                                  hintText: "Search products...",
-                                  onTap: () {
-                                    searchController.openView();
                                   },
-                                  controller: controller,
-                                  leading: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Icon(Icons.search),
-                                  ),
-                                ),
-                                suggestionsBuilder: (context, controller) {
-                                  return suggestions.map(
-                                    (product) => ListTile(
-                                      title: Text(product.title),
-                                      onTap: () async {
-                                        await Navigator.of(context).pushNamed(
-                                          ProductViewPage.route,
-                                          arguments: product,
-                                        );
-                                        controller.closeView("");
-                                      },
+                              builder: (context, productsSearchState) {
+                                return SearchAnchor(
+                                  searchController: searchController,
+                                  viewOnChanged: (value) {
+                                    final query = value.trim();
+                                    if (query.isNotEmpty) {
+                                      BlocProvider.of<SearchProductsBloc>(
+                                        context,
+                                      ).add(SearchProducts(query: query));
+                                    } else {
+                                      suggestions = [];
+                                      _triggerSearchViewRebuild();
+                                    }
+                                  },
+                                  builder: (context, controller) => SearchBar(
+                                    hintText: "Search products...",
+                                    onTap: () {
+                                      searchController.openView();
+                                    },
+                                    controller: controller,
+                                    leading: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Icon(Icons.search),
                                     ),
-                                  );
-                                },
-                              );
-                            },
-                          ),
+                                  ),
+                                  suggestionsBuilder: (context, controller) {
+                                    return suggestions.map(
+                                      (product) => ListTile(
+                                        title: Text(product.title),
+                                        onTap: () async {
+                                          await Navigator.of(context).pushNamed(
+                                            ProductViewPage.route,
+                                            arguments: product,
+                                          );
+                                          controller.closeView("");
+                                        },
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                      ),
                     ),
-                  ),
-                  SliverPadding(
-                    padding: EdgeInsetsGeometry.all(10),
-                    sliver: SliverToBoxAdapter(
-                      child: Card(
-                        child: SizedBox(
-                          width: 400,
-                          height: 300,
-                          child: Center(
-                            child: Text(
-                              "MEH BANNER",
-                              style: TextStyle(fontSize: 20),
+                    SliverPadding(
+                      padding: EdgeInsetsGeometry.symmetric(vertical: 10),
+                      sliver: SliverToBoxAdapter(
+                        child: Card(
+                          child: SizedBox(
+                            height: 225,
+                            child: Center(
+                              child: Text(
+                                "MEH BANNER",
+                                style: TextStyle(fontSize: 20),
+                              ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  SliverPadding(
-                    padding: EdgeInsetsGeometry.symmetric(horizontal: 20),
-                    sliver: SliverGrid(
+                    SliverGrid(
                       delegate: SliverChildBuilderDelegate(
                         (context, index) {
                           Product? currentProduct =
@@ -305,29 +307,29 @@ class _HomePageState extends State<HomePage> {
                         mainAxisExtent: 175,
                       ),
                     ),
-                  ),
-                  if (productsLoaded && productsList!.page.totalPages > 0)
-                    SliverPadding(
-                      padding: EdgeInsetsGeometry.directional(
-                        top: 20,
-                        bottom: 10,
-                      ),
-                      sliver: SliverToBoxAdapter(
-                        child: PaginationSelector(
-                          numberOfOptions: 5,
-                          maxPage: productsLoaded
-                              ? productsList.page.totalPages - 1
-                              : 10,
-                          selected: productsLoaded
-                              ? productsList.page.number
-                              : 1,
-                          onTap: ({required int pageIndex}) {
-                            getProducts(context, pageIndex);
-                          },
+                    if (productsLoaded && productsList!.page.totalPages > 0)
+                      SliverPadding(
+                        padding: EdgeInsetsGeometry.directional(
+                          top: 20,
+                          bottom: 10,
+                        ),
+                        sliver: SliverToBoxAdapter(
+                          child: PaginationSelector(
+                            numberOfOptions: 5,
+                            maxPage: productsLoaded
+                                ? productsList.page.totalPages - 1
+                                : 10,
+                            selected: productsLoaded
+                                ? productsList.page.number
+                                : 1,
+                            onTap: ({required int pageIndex}) {
+                              getProducts(context, pageIndex);
+                            },
+                          ),
                         ),
                       ),
-                    ),
-                ],
+                  ],
+                ),
               ),
             ),
           );
