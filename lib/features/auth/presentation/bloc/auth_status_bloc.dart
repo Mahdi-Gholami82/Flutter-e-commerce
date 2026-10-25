@@ -1,9 +1,11 @@
 import 'package:digi_meh/core/domain/use_cases/refresh_token_storage_use_case.dart';
+import 'package:digi_meh/features/auth/domain/use_cases/get_auth_user_use_case.dart';
+import 'package:digi_meh/features/auth/domain/use_cases/login_use_case.dart';
+import 'package:digi_meh/features/auth/domain/use_cases/refresh_auth_session_use_case.dart';
+import 'package:digi_meh/features/auth/domain/use_cases/sign_up_use_case.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 
-import 'package:digi_meh/features/auth/data/repositories/auth_repository.dart';
-import 'package:digi_meh/features/auth/data/repositories/secure_storage_repository.dart';
 import 'package:digi_meh/features/auth/domain/entities/auth_token_entity.dart';
 import 'package:digi_meh/features/auth/domain/entities/user_entity.dart';
 
@@ -75,14 +77,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthStatus> {
       var getIt = GetIt.instance;
       String? token = await getIt<LoadRefreshTokenStorageUseCase>().execute();
       if (token != null) {
-        var authRepository = getIt<AuthRepository>();
         try {
-          AuthTokens authTokens = await authRepository.refreshAuthSession(
-            refreshToken: token,
-          );
+          AuthTokens authTokens = await getIt<RefreshAuthSessionUseCase>()
+              .execute(refreshToken: token);
           emit(
             AuthStatusAuthenticated(
-              user: await authRepository.getAuthUser(
+              user: await getIt<GetAuthUserUseCase>().execute(
                 accessToken: authTokens.accessToken,
               ),
               authTokens: authTokens,
@@ -102,12 +102,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthStatus> {
     on<AuthEventDoSignIn>((event, emit) async {
       emit(AuthStatusInProgress());
       try {
-        final authRepository = GetIt.instance<AuthRepository>();
-        final authTokens = await authRepository.login(
+        var getIt = GetIt.instance;
+        final authTokens = await getIt<LoginUseCase>().execute(
           userName: event.userName,
           password: event.password,
         );
-        final user = await authRepository.getAuthUser(
+        final user = await getIt<GetAuthUserUseCase>().execute(
           accessToken: authTokens.accessToken,
         );
         emit(AuthStatusAuthenticated(user: user, authTokens: authTokens));
@@ -122,8 +122,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthStatus> {
     on<AuthEventDoSignUp>((event, emit) async {
       emit(AuthStatusInProgressSignUp());
       try {
-        final authRepository = GetIt.instance<AuthRepository>();
-        await authRepository.signUp(
+        await GetIt.instance<SignUpUseCase>().execute(
           username: event.userName,
           password: event.password,
           email: event.email,

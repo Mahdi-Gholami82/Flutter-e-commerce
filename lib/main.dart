@@ -7,6 +7,9 @@ import 'package:digi_meh/features/auth/data/repositories/auth_repository.dart';
 import 'package:digi_meh/features/auth/data/repositories/secure_storage_repository.dart';
 import 'package:digi_meh/features/auth/data/sources/auth_data_source.dart';
 import 'package:digi_meh/features/auth/data/sources/secure_storage_source.dart';
+import 'package:digi_meh/features/auth/domain/use_cases/get_auth_user_use_case.dart';
+import 'package:digi_meh/features/auth/domain/use_cases/login_use_case.dart';
+import 'package:digi_meh/features/auth/domain/use_cases/sign_up_use_case.dart';
 import 'package:digi_meh/features/auth/presentation/bloc/auth_status_bloc.dart';
 import 'package:digi_meh/features/auth/presentation/pages/sign_in_page.dart';
 import 'package:digi_meh/features/auth/presentation/pages/sign_up_page.dart';
@@ -88,6 +91,9 @@ Future<void> configureDependencies() async {
   getIt.registerLazySingleton(
     () => SaveRefreshTokenStorageUseCase(secureStorageRepository: getIt()),
   );
+  getIt.registerLazySingleton(() => GetAuthUserUseCase(getIt()));
+  getIt.registerLazySingleton(() => SignUpUseCase(getIt()));
+  getIt.registerLazySingleton(() => LoginUseCase(getIt()));
 }
 
 Future<void> main() async {
