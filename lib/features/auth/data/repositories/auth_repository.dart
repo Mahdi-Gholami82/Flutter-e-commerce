@@ -1,18 +1,28 @@
 import 'package:digi_meh/features/auth/data/models/address_model.dart';
 import 'package:digi_meh/features/auth/data/models/auth_tokens_model.dart';
-import 'package:digi_meh/features/auth/data/models/login_user_model.dart';
+import 'package:digi_meh/features/auth/data/models/sign_in_user_model.dart';
+import 'package:digi_meh/features/auth/data/models/sign_up_user_model.dart';
 import 'package:digi_meh/features/auth/data/models/user_model.dart';
 import 'package:digi_meh/features/auth/data/sources/auth_data_source.dart';
 import 'package:digi_meh/features/auth/domain/entities/address_entity.dart';
 import 'package:digi_meh/features/auth/domain/entities/auth_token_entity.dart';
 import 'package:digi_meh/features/auth/domain/entities/coordinates_entity.dart';
 import 'package:digi_meh/features/auth/domain/entities/user_entity.dart';
+import 'package:flutter/material.dart';
 
 abstract class AuthRepository {
   Future<AuthTokens> login({
     required String userName,
     required String password,
   });
+
+  Future<void> signUp({
+    required String username,
+    required String password,
+    required String email,
+    required String phone,
+  });
+
   Future<User> getAuthUser({required String accessToken});
   Future<AuthTokens> refreshAuthSession({required String refreshToken});
 }
@@ -53,7 +63,7 @@ class AuthRepositoryImpl extends AuthRepository {
     required String userName,
     required String password,
   }) async {
-    LoginUserModel user = await dataSource.login(
+    SignInUserModel user = await dataSource.signIn(
       username: userName,
       password: password,
     );
@@ -71,6 +81,21 @@ class AuthRepositoryImpl extends AuthRepository {
     return AuthTokens(
       refreshToken: authTokens.refreshToken,
       accessToken: authTokens.accessToken,
+    );
+  }
+
+  @override
+  Future<void> signUp({
+    required String username,
+    required String password,
+    required String email,
+    required String phone,
+  }) async {
+    await dataSource.signUp(
+      username: username,
+      password: password,
+      email: email,
+      phone: phone,
     );
   }
 }

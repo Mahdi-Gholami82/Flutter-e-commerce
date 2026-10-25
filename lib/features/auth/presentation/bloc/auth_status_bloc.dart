@@ -16,28 +16,55 @@ class AuthStatusAuthenticated extends AuthStatus {
 
 class AuthStatusNotAuthenticated extends AuthStatus {}
 
+class AuthStatusSignUpSuccess extends AuthStatusNotAuthenticated {
+  final String userName;
+  final String password;
+  AuthStatusSignUpSuccess({required this.userName, required this.password});
+}
+
 class AuthStatusInProgress extends AuthStatus {}
+
+class AuthStatusInProgressSignUp extends AuthStatus {}
 
 class AuthStatusLocalFailed extends AuthStatus {}
 
-class AuthStatusFailed extends AuthStatus {
+class AuthStatusFailedSignIn extends AuthStatus {
   final bool fallBackToLoginPage;
   final String? message;
-  AuthStatusFailed({this.fallBackToLoginPage = false, this.message});
+  AuthStatusFailedSignIn({this.fallBackToLoginPage = false, this.message});
+}
+
+class AuthStatusFailedSignUp extends AuthStatus {
+  final String? message;
+  AuthStatusFailedSignUp({this.message});
 }
 
 sealed class AuthEvent {}
 
 class AuthEventDoAuthenticateFromLocalToken extends AuthEvent {}
 
-class AuthEventDoAuthenticate extends AuthEvent {
+class AuthEventDoSignIn extends AuthEvent {
   final String userName;
   final String password;
+
   final bool checkOutWhenDone;
-  AuthEventDoAuthenticate({
+  AuthEventDoSignIn({
     required this.userName,
     required this.password,
     this.checkOutWhenDone = false,
+  });
+}
+
+class AuthEventDoSignUp extends AuthEvent {
+  final String userName;
+  final String password;
+  final String email;
+  final String phone;
+  AuthEventDoSignUp({
+    required this.userName,
+    required this.password,
+    required this.email,
+    required this.phone,
   });
 }
 
@@ -62,14 +89,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthStatus> {
           );
         } catch (error, stackTrace) {
           emit(
-            AuthStatusFailed(message: "error : $error \nstack : $stackTrace"),
+            AuthStatusFailedSignIn(
+              message: "error : $error \nstack : $stackTrace",
+            ),
           );
         }
         return;
       }
       emit(AuthStatusLocalFailed());
     });
-    on<AuthEventDoAuthenticate>((event, emit) async {
+    on<AuthEventDoSignIn>((event, emit) async {
       emit(AuthStatusInProgress());
       try {
         final authRepository = GetIt.instance<AuthRepository>();
@@ -82,7 +111,35 @@ class AuthBloc extends Bloc<AuthEvent, AuthStatus> {
         );
         emit(AuthStatusAuthenticated(user: user, authTokens: authTokens));
       } catch (error, stackTrace) {
-        emit(AuthStatusFailed(message: "error : $error \nstack : $stackTrace"));
+        emit(
+          AuthStatusFailedSignIn(
+            message: "error : $error \nstack : $stackTrace",
+          ),
+        );
+      }
+    });
+    on<AuthEventDoSignUp>((event, emit) async {
+      emit(AuthStatusInProgressSignUp());
+      try {
+        final authRepository = GetIt.instance<AuthRepository>();
+        await authRepository.signUp(
+          username: event.userName,
+          password: event.password,
+          email: event.email,
+          phone: event.phone,
+        );
+        emit(
+          AuthStatusSignUpSuccess(
+            userName: event.userName,
+            password: event.password,
+          ),
+        );
+      } catch (error, stackTrace) {
+        emit(
+          AuthStatusFailedSignUp(
+            message: "error : $error \nstack : $stackTrace",
+          ),
+        );
       }
     });
   }

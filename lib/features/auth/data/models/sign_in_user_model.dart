@@ -1,4 +1,4 @@
-class LoginUserModel {
+class SignInUserModel {
   final int id;
   final String username;
   final String email;
@@ -8,7 +8,7 @@ class LoginUserModel {
   final String accessToken;
   final String refreshToken;
 
-  const LoginUserModel({
+  const SignInUserModel({
     required this.id,
     required this.username,
     required this.email,
@@ -19,8 +19,8 @@ class LoginUserModel {
     required this.refreshToken,
   });
 
-  factory LoginUserModel.fromJson(Map<String, dynamic> json) {
-    return LoginUserModel(
+  factory SignInUserModel.fromJson(Map<String, dynamic> json) {
+    return SignInUserModel(
       id: json["id"] as int,
       username: json["username"] as String,
       email: json["email"] as String,

@@ -8,6 +8,7 @@ import 'package:digi_meh/features/auth/data/sources/auth_data_source.dart';
 import 'package:digi_meh/features/auth/data/sources/secure_storage_source.dart';
 import 'package:digi_meh/features/auth/presentation/bloc/auth_status_bloc.dart';
 import 'package:digi_meh/features/auth/presentation/pages/sign_in_page.dart';
+import 'package:digi_meh/features/auth/presentation/pages/sign_up_page.dart';
 import 'package:digi_meh/features/cart/presentation/bloc/cart_cubit.dart';
 import 'package:digi_meh/features/cart/presentation/bloc/cart_prefs_bloc.dart';
 import 'package:digi_meh/features/home/data/repositories/products_repository.dart';
@@ -33,7 +34,14 @@ Future<void> configureDependencies() async {
   getIt.registerSingleton<SharedPreferences>(prefs);
 
   getIt.registerSingleton(ECommerceApiConfig(host: "dummyjson.com"));
-  getIt.registerSingleton(Dio());
+  getIt.registerSingleton(
+    BaseOptions(
+      sendTimeout: Duration(seconds: 4),
+      receiveTimeout: Duration(seconds: 4),
+      connectTimeout: Duration(seconds: 4),
+    ),
+  );
+  getIt.registerSingleton(Dio(getIt()));
 
   // home
   getIt.registerLazySingleton<ProductsSource>(
@@ -120,17 +128,20 @@ class DigiMehApp extends StatelessWidget {
               theme: AppTheme.light,
               darkTheme: AppTheme.dark,
               home: const LandingPage(),
-              routes: {SettingsPage.route: (context) => SettingsPage()},
+              routes: {
+                SettingsPage.route: (_) => SettingsPage(),
+                SignUpPage.route: (_) => SignUpPage(),
+              },
               onGenerateRoute: (settings) => switch (settings.name) {
                 ProductViewPage.route => MaterialPageRoute(
-                  builder: (context) {
+                  builder: (_) {
                     return ProductViewPage(
                       product: settings.arguments as Product,
                     );
                   },
                 ),
                 SignInPage.route => MaterialPageRoute(
-                  builder: (context) {
+                  builder: (_) {
                     return SignInPage(
                       checkOutWhenDone: settings.arguments as bool?,
                     );
