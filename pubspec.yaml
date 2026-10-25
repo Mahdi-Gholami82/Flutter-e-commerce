@@ -41,11 +41,12 @@ dependencies:
   shimmer_builder:
     git:
       url: https://github.com/Mahdi-Gholami82/shimmer_builder
-      ref: v0.1.0
+      ref: v0.2.0
   flutter_bloc: ^9.1.1
   stream_transform: ^2.1.2
   flutter_secure_storage: ^11.2.0
   persistent_bottom_nav_bar_v2: ^6.5.0
+  carousel_slider: ^5.1.2
 
 dev_dependencies:
   flutter_test:

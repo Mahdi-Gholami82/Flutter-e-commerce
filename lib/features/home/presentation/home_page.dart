@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:digi_meh/core/data/configs/constants.dart';
 import 'package:digi_meh/core/presentation/widgets/default_shimmer_network_image.dart';
 import 'package:digi_meh/features/home/domain/entities/product_entity.dart';
@@ -21,8 +24,11 @@ class _HomePageState extends State<HomePage> {
   var searchController = SearchController();
   var scrollController = ScrollController();
   int currentPageNumber = 0;
+  final int carouselLimit = 3;
+  List<Product>? randProducts;
+  final double carouselHeight = 250;
 
-  void getProducts(BuildContext context, int pageIndex) {
+  void _getProducts(BuildContext context, int pageIndex) {
     BlocProvider.of<ProductsBloc>(
       context,
     ).add(GetProductsEvent(pageNumber: pageIndex));
@@ -35,10 +41,26 @@ class _HomePageState extends State<HomePage> {
     searchController.text = previousText;
   }
 
+  String _getMinString(Product product, int limit) {
+    return product.title.length <= limit
+        ? product.title
+        : product.title.substring(0, limit).replaceAll(RegExp(r".{3}$"), "...");
+  }
+
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     var colorScheme = theme.colorScheme;
+    var carouselColors = [
+      (background: colorScheme.primary, foreground: colorScheme.onPrimary),
+      (background: colorScheme.tertiary, foreground: colorScheme.onTertiary),
+      (background: colorScheme.inverseSurface, foreground: colorScheme.surface),
+    ];
+    List<Color> carouselForeGroundColors = [
+      colorScheme.primary,
+      colorScheme.tertiary,
+      colorScheme.inverseSurface,
+    ];
     return Scaffold(
       body: BlocConsumer<ProductsBloc, ProductsBlocState>(
         listener: (context, state) {
@@ -54,7 +76,7 @@ class _HomePageState extends State<HomePage> {
                     action: SnackBarAction(
                       label: "Retry",
                       onPressed: () {
-                        getProducts(context, currentPageNumber);
+                        _getProducts(context, currentPageNumber);
                       },
                     ),
                   ),
@@ -69,6 +91,11 @@ class _HomePageState extends State<HomePage> {
             case ProductsLoaded loaded:
               {
                 currentPageNumber = loaded.result.page.number;
+                final products = loaded.result.products;
+                randProducts = List.generate(
+                  products.length.clamp(0, carouselLimit),
+                  (index) => products[Random().nextInt(products.length)],
+                );
               }
             case ProductsInitial():
           }
@@ -76,7 +103,7 @@ class _HomePageState extends State<HomePage> {
         },
         builder: (context, state) {
           if (state is ProductsInitial) {
-            getProducts(context, currentPageNumber);
+            _getProducts(context, currentPageNumber);
           }
           ProductsLoaded? loadedState = state is ProductsLoaded ? state : null;
           ProductsList? productsList = loadedState?.result;
@@ -158,18 +185,73 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     SliverPadding(
-                      padding: EdgeInsetsGeometry.symmetric(vertical: 10),
+                      padding: EdgeInsetsGeometry.symmetric(vertical: 30),
                       sliver: SliverToBoxAdapter(
-                        child: Card(
-                          child: SizedBox(
-                            height: 225,
-                            child: Center(
-                              child: Text(
-                                "MEH BANNER",
-                                style: TextStyle(fontSize: 20),
-                              ),
-                            ),
+                        child: ShimmerBuilder(
+                          sampleBuilder: (context) => SizedBox(
+                            height: carouselHeight,
+                            width: double.infinity,
                           ),
+                          childBuilder: (BuildContext context) {
+                            return CarouselSlider(
+                              items: List.generate(randProducts!.length, (
+                                index,
+                              ) {
+                                var product = randProducts![index];
+                                return Container(
+                                  padding: .symmetric(
+                                    horizontal: 40,
+                                    vertical: 20,
+                                  ),
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    color: carouselColors[index].background,
+                                    borderRadius: .circular(20),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: .spaceBetween,
+                                    children: [
+                                      Flexible(
+                                        flex: 4,
+                                        child: FittedBox(
+                                          child: Text(
+                                            _getMinString(product, 20),
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: .w500,
+                                              color: carouselColors[index]
+                                                  .foreground,
+                                              overflow: .ellipsis,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Flexible(
+                                        flex: 5,
+                                        child: FittedBox(
+                                          child: DefaultShimmerNetworkImage(
+                                            uriString:
+                                                (product.images.isEmpty
+                                                        ? product.thumbnail
+                                                        : product.images.first)
+                                                    .toString(),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }),
+                              options: CarouselOptions(
+                                aspectRatio: 2.0,
+                                enlargeCenterPage: true,
+                                height: carouselHeight,
+                                pageViewKey: PageStorageKey<String>(
+                                  'carousel_slider',
+                                ),
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ),
@@ -323,7 +405,7 @@ class _HomePageState extends State<HomePage> {
                                 ? productsList.page.number
                                 : 1,
                             onTap: ({required int pageIndex}) {
-                              getProducts(context, pageIndex);
+                              _getProducts(context, pageIndex);
                             },
                           ),
                         ),

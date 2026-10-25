@@ -1,4 +1,4 @@
 import 'dart:ui';
 
-const int productsListPaginationLimit = 10;
+const int productsListPaginationLimit = 15;
 const defaultImageSize = Size.square(226);

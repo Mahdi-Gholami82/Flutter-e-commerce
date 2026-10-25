@@ -1,5 +1,4 @@
 import 'package:digi_meh/features/cart/presentation/cart_page.dart';
-import 'package:digi_meh/features/category/presentation/category_page.dart';
 import 'package:digi_meh/features/home/presentation/bloc/products_bloc.dart';
 import 'package:digi_meh/features/home/presentation/bloc/search_products_bloc.dart';
 import 'package:digi_meh/features/home/presentation/home_page.dart';
