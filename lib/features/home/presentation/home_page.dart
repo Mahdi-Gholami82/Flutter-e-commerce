@@ -56,11 +56,6 @@ class _HomePageState extends State<HomePage> {
       (background: colorScheme.tertiary, foreground: colorScheme.onTertiary),
       (background: colorScheme.inverseSurface, foreground: colorScheme.surface),
     ];
-    List<Color> carouselForeGroundColors = [
-      colorScheme.primary,
-      colorScheme.tertiary,
-      colorScheme.inverseSurface,
-    ];
     return Scaffold(
       body: BlocConsumer<ProductsBloc, ProductsBlocState>(
         listener: (context, state) {
@@ -92,10 +87,8 @@ class _HomePageState extends State<HomePage> {
               {
                 currentPageNumber = loaded.result.page.number;
                 final products = loaded.result.products;
-                randProducts = List.generate(
-                  products.length.clamp(0, carouselLimit),
-                  (index) => products[Random().nextInt(products.length)],
-                );
+                randProducts = [...products]..shuffle();
+                randProducts = randProducts!.sublist(0, carouselColors.length);
               }
             case ProductsInitial():
           }
@@ -223,6 +216,7 @@ class _HomePageState extends State<HomePage> {
                                                   .foreground,
                                               overflow: .ellipsis,
                                             ),
+                                            maxLines: 1,
                                           ),
                                         ),
                                       ),
@@ -230,11 +224,8 @@ class _HomePageState extends State<HomePage> {
                                         flex: 5,
                                         child: FittedBox(
                                           child: DefaultShimmerNetworkImage(
-                                            uriString:
-                                                (product.images.isEmpty
-                                                        ? product.thumbnail
-                                                        : product.images.first)
-                                                    .toString(),
+                                            uriString: product.thumbnail
+                                                .toString(),
                                           ),
                                         ),
                                       ),
