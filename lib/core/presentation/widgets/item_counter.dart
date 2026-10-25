@@ -99,7 +99,6 @@ class _ItemCounterState extends State<ItemCounter> {
             controller: controller,
             textAlign: TextAlign.center,
             textAlignVertical: TextAlignVertical.center,
-
             enableSuggestions: false,
             inputFormatters: [
               LengthLimitingTextInputFormatter(5),

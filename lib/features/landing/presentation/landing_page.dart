@@ -3,7 +3,6 @@ import 'package:digi_meh/features/category/presentation/category_page.dart';
 import 'package:digi_meh/features/home/presentation/bloc/products_bloc.dart';
 import 'package:digi_meh/features/home/presentation/bloc/search_products_bloc.dart';
 import 'package:digi_meh/features/home/presentation/home_page.dart';
-import 'package:digi_meh/features/landing/presentation/widgets/custom_navigation_bar.dart';
 import 'package:digi_meh/features/profile/presentation/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
