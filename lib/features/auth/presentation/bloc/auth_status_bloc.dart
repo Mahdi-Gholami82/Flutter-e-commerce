@@ -1,3 +1,4 @@
+import 'package:digi_meh/core/domain/use_cases/refresh_token_storage_use_case.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 
@@ -72,7 +73,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthStatus> {
   AuthBloc() : super(AuthStatusNotAuthenticated()) {
     on<AuthEventDoAuthenticateFromLocalToken>((event, emit) async {
       var getIt = GetIt.instance;
-      String? token = await getIt<SecureStorageRepository>().getRefreshToken();
+      String? token = await getIt<LoadRefreshTokenStorageUseCase>().execute();
       if (token != null) {
         var authRepository = getIt<AuthRepository>();
         try {
@@ -142,5 +143,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthStatus> {
         );
       }
     });
+  }
+
+  @override
+  void onChange(Change<AuthStatus> change) {
+    super.onChange(change);
+    if (change.nextState case AuthStatusAuthenticated statusAuthenticated) {
+      GetIt.instance<SaveRefreshTokenStorageUseCase>().execute(
+        statusAuthenticated.authTokens.refreshToken,
+      );
+    }
   }
 }

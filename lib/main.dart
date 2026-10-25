@@ -1,6 +1,7 @@
 import 'package:digi_meh/core/data/configs/api_config.dart';
 import 'package:digi_meh/core/data/repositories/preferences_repository.dart';
 import 'package:digi_meh/core/data/sources/preferences_data_source.dart';
+import 'package:digi_meh/core/domain/use_cases/refresh_token_storage_use_case.dart';
 import 'package:digi_meh/core/presentation/theme/theme.dart';
 import 'package:digi_meh/features/auth/data/repositories/auth_repository.dart';
 import 'package:digi_meh/features/auth/data/repositories/secure_storage_repository.dart';
@@ -80,6 +81,12 @@ Future<void> configureDependencies() async {
   );
   getIt.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(dataSource: getIt()),
+  );
+  getIt.registerLazySingleton(
+    () => LoadRefreshTokenStorageUseCase(secureStorageRepository: getIt()),
+  );
+  getIt.registerLazySingleton(
+    () => SaveRefreshTokenStorageUseCase(secureStorageRepository: getIt()),
   );
 }
 
