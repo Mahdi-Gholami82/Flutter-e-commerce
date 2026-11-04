@@ -236,7 +236,8 @@ class _ProductViewPageState extends State<ProductViewPage> {
                                               ?.numberOfItem ??
                                           1;
                                       return ItemCounter(
-                                        enable: product.stock > 0,
+                                        enable: 0 < product.stock,
+                                        maxLimit: product.stock,
                                         initialCount: numberOfItem,
                                         onChanged: (int number) {
                                           numberOfItem = number;

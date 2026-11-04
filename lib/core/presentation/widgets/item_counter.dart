@@ -9,9 +9,11 @@ class ItemCounter extends StatefulWidget {
     required this.onChanged,
     this.textColor,
     this.onDelete,
+    this.maxLimit,
   });
   final bool enable;
   final int initialCount;
+  final int? maxLimit;
   final void Function(int number) onChanged;
   final Color? textColor;
   final void Function()? onDelete;
@@ -34,8 +36,11 @@ class _ItemCounterState extends State<ItemCounter> {
 
   void resetTextIfNeccessary() {
     var trimmed = controller.text.trim();
-    if (trimmed.isEmpty || (int.tryParse(trimmed) ?? 0) < 1) {
+    var parsedNum = int.tryParse(trimmed) ?? 0;
+    if (parsedNum < 1) {
       count = 1;
+    } else if (widget.maxLimit != null && parsedNum > widget.maxLimit!) {
+      count = widget.maxLimit!;
     }
   }
 
@@ -59,17 +64,9 @@ class _ItemCounterState extends State<ItemCounter> {
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    resetTextIfNeccessary();
-  }
-
-  @override
   void didUpdateWidget(covariant ItemCounter oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.initialCount != widget.initialCount) {
-      count = widget.initialCount;
-    }
+    if (oldWidget.maxLimit != widget.maxLimit) resetTextIfNeccessary();
   }
 
   @override

@@ -172,6 +172,9 @@ class CartPage extends StatelessWidget {
                                                             child: FittedBox(
                                                               child: ShimmerPaintOver(
                                                                 child: ItemCounter(
+                                                                  maxLimit:
+                                                                      product!
+                                                                          .stock,
                                                                   onDelete: () {
                                                                     var cartCubit =
                                                                         BlocProvider.of<
@@ -204,11 +207,8 @@ class CartPage extends StatelessWidget {
                                                                     );
                                                                   },
                                                                   enable:
-                                                                      cartItem ==
-                                                                          null
-                                                                      ? false
-                                                                      : cartItem.numberOfItem <
-                                                                            product!.stock,
+                                                                      cartItem !=
+                                                                      null,
                                                                   initialCount:
                                                                       cartItem
                                                                           ?.numberOfItem ??
