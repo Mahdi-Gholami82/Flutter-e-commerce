@@ -1,7 +1,7 @@
 import 'package:digi_meh/core/domain/use_cases/load_refresh_token_storage_use_case.dart';
 import 'package:digi_meh/core/domain/use_cases/save_refresh_token_storage_use_case.dart';
 import 'package:digi_meh/features/auth/domain/use_cases/get_auth_user_use_case.dart';
-import 'package:digi_meh/features/auth/domain/use_cases/login_use_case.dart';
+import 'package:digi_meh/features/auth/domain/use_cases/sign_in_use_case.dart';
 import 'package:digi_meh/features/auth/domain/use_cases/refresh_auth_session_use_case.dart';
 import 'package:digi_meh/features/auth/domain/use_cases/sign_up_use_case.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -104,7 +104,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthStatus> {
       emit(AuthStatusInProgress());
       try {
         var getIt = GetIt.instance;
-        final authTokens = await getIt<LoginUseCase>().execute(
+        final authTokens = await getIt<SignInUseCase>().execute(
           userName: event.userName,
           password: event.password,
         );

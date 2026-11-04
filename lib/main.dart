@@ -1,16 +1,11 @@
 import 'package:digi_meh/core/data/configs/api_config.dart';
 import 'package:digi_meh/core/data/repositories/preferences_repository.dart';
 import 'package:digi_meh/core/data/sources/preferences_data_source.dart';
-import 'package:digi_meh/core/domain/use_cases/load_refresh_token_storage_use_case.dart';
-import 'package:digi_meh/core/domain/use_cases/save_refresh_token_storage_use_case.dart';
+import 'package:digi_meh/core/domain/use_cases/use_cases.dart';
 import 'package:digi_meh/core/presentation/theme/theme.dart';
-import 'package:digi_meh/features/auth/data/repositories/auth_repository.dart';
-import 'package:digi_meh/features/auth/data/repositories/secure_storage_repository.dart';
-import 'package:digi_meh/features/auth/data/sources/auth_data_source.dart';
-import 'package:digi_meh/features/auth/data/sources/secure_storage_source.dart';
-import 'package:digi_meh/features/auth/domain/use_cases/get_auth_user_use_case.dart';
-import 'package:digi_meh/features/auth/domain/use_cases/login_use_case.dart';
-import 'package:digi_meh/features/auth/domain/use_cases/sign_up_use_case.dart';
+import 'package:digi_meh/features/auth/data/repositories/repositories.dart';
+import 'package:digi_meh/features/auth/data/sources/sources.dart';
+import 'package:digi_meh/features/auth/domain/use_cases/use_cases.dart';
 import 'package:digi_meh/features/auth/presentation/bloc/auth_status_bloc.dart';
 import 'package:digi_meh/features/auth/presentation/pages/sign_in_page.dart';
 import 'package:digi_meh/features/auth/presentation/pages/sign_up_page.dart';
@@ -19,9 +14,7 @@ import 'package:digi_meh/features/cart/presentation/bloc/cart_prefs_bloc.dart';
 import 'package:digi_meh/features/home/data/repositories/products_repository.dart';
 import 'package:digi_meh/features/home/data/sources/products_source.dart';
 import 'package:digi_meh/features/home/domain/entities/product_entity.dart';
-import 'package:digi_meh/features/home/domain/use_cases/get_products_use_case.dart';
-import 'package:digi_meh/features/home/domain/use_cases/get_single_product_use_case.dart';
-import 'package:digi_meh/features/home/domain/use_cases/search_products_use_case.dart';
+import 'package:digi_meh/features/home/domain/use_cases/use_cases.dart';
 import 'package:digi_meh/features/landing/presentation/landing_page.dart';
 import 'package:digi_meh/features/product_view/presentation/product_view_page.dart';
 import 'package:digi_meh/features/settings/presentation/bloc/theme_mode_cubit.dart';
@@ -98,7 +91,7 @@ Future<void> configureDependencies() async {
   );
   getIt.registerLazySingleton(() => GetAuthUserUseCase(getIt()));
   getIt.registerLazySingleton(() => SignUpUseCase(getIt()));
-  getIt.registerLazySingleton(() => LoginUseCase(getIt()));
+  getIt.registerLazySingleton(() => SignInUseCase(getIt()));
 }
 
 Future<void> main() async {
