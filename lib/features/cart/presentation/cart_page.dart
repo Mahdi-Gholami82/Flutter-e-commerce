@@ -173,8 +173,9 @@ class CartPage extends StatelessWidget {
                                                               child: ShimmerPaintOver(
                                                                 child: ItemCounter(
                                                                   maxLimit:
-                                                                      product!
-                                                                          .stock,
+                                                                      product
+                                                                          ?.stock ??
+                                                                      1,
                                                                   onDelete: () {
                                                                     var cartCubit =
                                                                         BlocProvider.of<
