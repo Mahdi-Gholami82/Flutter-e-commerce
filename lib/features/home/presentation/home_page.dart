@@ -189,45 +189,91 @@ class _HomePageState extends State<HomePage> {
                                 index,
                               ) {
                                 var product = randProducts![index];
-                                return Container(
-                                  padding: .symmetric(
-                                    horizontal: 40,
-                                    vertical: 20,
-                                  ),
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                    color: carouselColors[index].background,
-                                    borderRadius: .circular(20),
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment: .spaceBetween,
-                                    children: [
-                                      Flexible(
-                                        flex: 4,
-                                        child: FittedBox(
-                                          child: Text(
-                                            _getMinString(product, 20),
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: .w500,
-                                              color: carouselColors[index]
-                                                  .foreground,
-                                              overflow: .ellipsis,
+                                return MouseRegion(
+                                  cursor: SystemMouseCursors.click,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.of(context).pushNamed(
+                                        ProductViewPage.route,
+                                        arguments: product,
+                                      );
+                                    },
+                                    child: Container(
+                                      padding: .symmetric(
+                                        horizontal: 10,
+                                        vertical: 20,
+                                      ),
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                        color: carouselColors[index].background,
+                                        borderRadius: .circular(20),
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment: .spaceBetween,
+                                        children: [
+                                          Flexible(
+                                            flex: 4,
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsetsGeometry.directional(
+                                                    end: 5,
+                                                    start: 10,
+                                                  ),
+                                              child: Column(
+                                                mainAxisAlignment: .center,
+                                                children: [
+                                                  Flexible(
+                                                    child: FittedBox(
+                                                      child: Text(
+                                                        _getMinString(
+                                                          product,
+                                                          20,
+                                                        ),
+                                                        style: TextStyle(
+                                                          fontSize: 16,
+                                                          fontWeight: .w500,
+                                                          color:
+                                                              carouselColors[index]
+                                                                  .foreground,
+                                                          overflow: .ellipsis,
+                                                        ),
+                                                        maxLines: 1,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  SizedBox(height: 20),
+                                                  Flexible(
+                                                    child: FittedBox(
+                                                      child: Container(
+                                                        decoration: BoxDecoration(
+                                                          color: colorScheme
+                                                              .surfaceContainer,
+                                                          borderRadius:
+                                                              .circular(25),
+                                                        ),
+                                                        alignment: .center,
+                                                        width: 80,
+                                                        height: 30,
+                                                        child: Text("View"),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
-                                            maxLines: 1,
                                           ),
-                                        ),
-                                      ),
-                                      Flexible(
-                                        flex: 5,
-                                        child: FittedBox(
-                                          child: DefaultShimmerNetworkImage(
-                                            uriString: product.thumbnail
-                                                .toString(),
+                                          Flexible(
+                                            flex: 5,
+                                            child: FittedBox(
+                                              child: DefaultShimmerNetworkImage(
+                                                uriString: product.thumbnail
+                                                    .toString(),
+                                              ),
+                                            ),
                                           ),
-                                        ),
+                                        ],
                                       ),
-                                    ],
+                                    ),
                                   ),
                                 );
                               }),
