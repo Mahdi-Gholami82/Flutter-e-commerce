@@ -131,7 +131,9 @@ class DigiMehApp extends StatelessWidget {
             ).addAllCartItems(state.cartItems);
           }
         },
-        child: BlocBuilder<ThemeModeCubit, ThemeMode>(
+        child: BlocConsumer<ThemeModeCubit, ThemeMode>(
+          listener: (context, themeMode) =>
+              GetIt.instance<PreferencesRepository>().saveThemeMode(themeMode),
           builder: (context, themeMode) {
             return MaterialApp(
               title: "DigiMeh",
