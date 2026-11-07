@@ -45,6 +45,14 @@ class _HomePageState extends State<HomePage> {
         : product.title.substring(0, limit).replaceAll(RegExp(r".{3}$"), "...");
   }
 
+  Future<void> _pushToProductViewPage(
+    BuildContext context, {
+    required Product product,
+  }) => Navigator.of(
+    context,
+    rootNavigator: true,
+  ).pushNamed(ProductViewPage.route, arguments: product);
+
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
@@ -162,9 +170,9 @@ class _HomePageState extends State<HomePage> {
                                       (product) => ListTile(
                                         title: Text(product.title),
                                         onTap: () async {
-                                          await Navigator.of(context).pushNamed(
-                                            ProductViewPage.route,
-                                            arguments: product,
+                                          await _pushToProductViewPage(
+                                            context,
+                                            product: product,
                                           );
                                           controller.closeView("");
                                         },
@@ -194,9 +202,9 @@ class _HomePageState extends State<HomePage> {
                                   cursor: SystemMouseCursors.click,
                                   child: GestureDetector(
                                     onTap: () {
-                                      Navigator.of(context).pushNamed(
-                                        ProductViewPage.route,
-                                        arguments: product,
+                                      _pushToProductViewPage(
+                                        context,
+                                        product: product,
                                       );
                                     },
                                     child: Container(
@@ -315,9 +323,9 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                     onTap: () {
                                       if (currentProduct != null) {
-                                        Navigator.of(context).pushNamed(
-                                          ProductViewPage.route,
-                                          arguments: currentProduct,
+                                        _pushToProductViewPage(
+                                          context,
+                                          product: currentProduct,
                                         );
                                       }
                                     },
