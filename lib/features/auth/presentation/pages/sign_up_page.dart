@@ -19,6 +19,7 @@ class _SignUpPageState extends State<SignUpPage> {
   String passwordText = "";
   String emailText = "";
   String phoneText = "";
+  var emailFieldConstroller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -118,6 +119,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               validator: (value) => basicNoSpaceValidator(
                                 value,
                                 fieldName: "username",
+                                minLenght: 3,
                               ),
                             ),
                             TextFormField(
@@ -132,6 +134,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               validator: (value) => basicNoSpaceValidator(
                                 value,
                                 fieldName: "password",
+                                minLenght: 3,
                               ),
                             ),
                             TextFormField(
@@ -156,24 +159,41 @@ class _SignUpPageState extends State<SignUpPage> {
                               },
                             ),
                             TextFormField(
+                              controller: emailFieldConstroller,
                               onFieldSubmitted: (_) => submit(context),
                               decoration: InputDecoration(
                                 hintText: "phone",
                                 prefixIcon: Icon(Icons.phone),
                               ),
                               onChanged: (value) {
+                                value = value
+                                    .replaceAll(r"(?!^)\+", "")
+                                    .replaceAll(
+                                      RegExp(r"[^\p{Nd}\+\s]+", unicode: true),
+                                      "",
+                                    )
+                                    .replaceAll(RegExp(r"[-\s]+"), " ");
+                                if (emailFieldConstroller.text != value) {
+                                  emailFieldConstroller.value =
+                                      emailFieldConstroller.value.copyWith(
+                                        text: value,
+                                        selection: TextSelection.collapsed(
+                                          offset: value.length,
+                                        ),
+                                      );
+                                }
                                 phoneText = value.trim();
                               },
                               validator: (value) {
                                 value = value?.trim() ?? "";
                                 if (value.isEmpty) {
-                                  return "Email cannot be empty";
+                                  return "Phone cannot be empty";
                                 } else if (!RegExp(
-                                  r"^(\+\d{1,2})?\d{10}",
+                                  r"^(\+\d{2})?[\-(?:\s+)]\d{10}$",
                                 ).hasMatch(
                                   value.replaceAll(RegExp(r"\s"), ""),
                                 )) {
-                                  return "Invalid email format";
+                                  return "Invalid phone format";
                                 }
                                 return null;
                               },
