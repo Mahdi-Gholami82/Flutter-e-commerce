@@ -195,6 +195,8 @@ class CartPage extends StatelessWidget {
                                                                             Text(
                                                                               "Item removed",
                                                                             ),
+                                                                        persist:
+                                                                            false,
                                                                         action: SnackBarAction(
                                                                           label:
                                                                               "Undo",

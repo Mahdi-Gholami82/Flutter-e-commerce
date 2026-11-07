@@ -66,6 +66,7 @@ class _HomePageState extends State<HomePage> {
                 messenger.showSnackBar(
                   SnackBar(
                     content: Text("Failed to load products"),
+                    persist: false,
                     action: SnackBarAction(
                       label: "Retry",
                       onPressed: () {
