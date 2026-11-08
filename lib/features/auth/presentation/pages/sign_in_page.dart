@@ -174,24 +174,26 @@ class _SignInPageState extends State<SignInPage> {
                         ),
                       ),
                       SizedBox(height: 10),
-                      Text.rich(
-                        TextSpan(
-                          style: theme.textTheme.bodySmall,
-                          children: [
-                            TextSpan(text: "Don't have han account?  "),
-                            TextSpan(
-                              text: "Sign up here",
-                              style: theme.textTheme.bodySmall!.copyWith(
-                                color: colorScheme.primary,
+                      Center(
+                        child: Text.rich(
+                          TextSpan(
+                            style: theme.textTheme.bodySmall,
+                            children: [
+                              TextSpan(text: "Don't have han account?  "),
+                              TextSpan(
+                                text: "Sign up here",
+                                style: theme.textTheme.bodySmall!.copyWith(
+                                  color: colorScheme.primary,
+                                ),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    Navigator.of(
+                                      context,
+                                    ).pushNamed(SignUpPage.route);
+                                  },
                               ),
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () {
-                                  Navigator.of(
-                                    context,
-                                  ).pushNamed(SignUpPage.route);
-                                },
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                       FittedBox(child: SizedBox(height: 150)),
