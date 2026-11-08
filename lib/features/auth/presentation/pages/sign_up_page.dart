@@ -66,42 +66,33 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
             ),
             child: Scaffold(
-              resizeToAvoidBottomInset: false,
               appBar: AppBar(),
               body: CustomAnimatedBottomInsets(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 40),
-                  child: Column(
-                    mainAxisAlignment: .center,
-                    crossAxisAlignment: .center,
+                  child: ListView(
                     children: [
-                      Flexible(
-                        child: FittedBox(
-                          child: Icon(
-                            Icons.account_circle_sharp,
-                            size: 150,
-                            color: colorScheme.primary,
-                          ),
-                        ),
+                      Icon(
+                        Icons.account_circle_sharp,
+                        size: 150,
+                        color: colorScheme.primary,
                       ),
-                      Flexible(child: FittedBox(child: SizedBox(height: 24))),
-                      Flexible(
-                        child: FittedBox(
-                          fit: BoxFit.fitHeight,
-                          child: Column(
-                            mainAxisSize: .min,
-                            children: [
-                              Text(
-                                "Create Account",
-                                style: TextStyle(
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              Text("Create an account to start shopping."),
-                            ],
+                      SizedBox(height: 24),
+                      Column(
+                        mainAxisSize: .min,
+                        children: [
+                          Text(
+                            "Create Account",
+                            style: TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
-                        ),
+                          Text(
+                            "Create an account to start shopping.",
+                            overflow: .ellipsis,
+                          ),
+                        ],
                       ),
                       SizedBox(height: 20),
                       Padding(
@@ -230,7 +221,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               : Text("Sign Up"),
                         ),
                       ),
-                      Flexible(child: FittedBox(child: SizedBox(height: 150))),
+                      FittedBox(child: SizedBox(height: 150)),
                     ],
                   ),
                 ),
