@@ -6,6 +6,8 @@ import 'package:digi_meh/features/home/presentation/bloc/products_bloc.dart';
 import 'package:digi_meh/features/home/presentation/bloc/products_paging_event.dart';
 import 'package:digi_meh/features/home/presentation/bloc/products_paging_state.dart';
 import 'package:digi_meh/features/home/presentation/bloc/search_products_bloc.dart';
+import 'package:digi_meh/features/home/presentation/bloc/search_products_event.dart';
+import 'package:digi_meh/features/home/presentation/bloc/search_products_state.dart';
 import 'package:digi_meh/features/product_view/presentation/product_view_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

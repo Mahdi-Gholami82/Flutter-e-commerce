@@ -1,11 +1,14 @@
 import 'package:digi_meh/core/data/configs/constants.dart';
 import 'package:digi_meh/core/presentation/widgets/default_shimmer_network_image.dart';
 import 'package:digi_meh/core/presentation/widgets/item_counter.dart';
+import 'package:digi_meh/features/auth/presentation/bloc/auth_status_bloc_state.dart';
 import 'package:digi_meh/features/auth/presentation/bloc/auth_status_bloc.dart';
 import 'package:digi_meh/features/auth/presentation/pages/sign_in_page.dart';
 import 'package:digi_meh/features/cart/domain/entities/cart_item_entity.dart';
 import 'package:digi_meh/features/cart/presentation/bloc/cart_cubit.dart';
+import 'package:digi_meh/features/cart/presentation/bloc/cart_cubit_state.dart';
 import 'package:digi_meh/features/cart/presentation/bloc/cart_prefs_bloc.dart';
+import 'package:digi_meh/features/cart/presentation/bloc/prefs_cart_bloc_state.dart';
 import 'package:digi_meh/features/home/domain/entities/product_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

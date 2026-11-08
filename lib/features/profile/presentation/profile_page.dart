@@ -1,6 +1,7 @@
 import 'package:digi_meh/core/data/configs/constants.dart';
 import 'package:digi_meh/core/presentation/widgets/default_shimmer_network_image.dart';
 import 'package:digi_meh/features/auth/domain/entities/user_entity.dart';
+import 'package:digi_meh/features/auth/presentation/bloc/auth_status_bloc_state.dart';
 import 'package:digi_meh/features/auth/presentation/bloc/auth_status_bloc.dart';
 import 'package:digi_meh/features/auth/presentation/pages/sign_in_page.dart';
 import 'package:digi_meh/features/settings/presentation/settings_page.dart';

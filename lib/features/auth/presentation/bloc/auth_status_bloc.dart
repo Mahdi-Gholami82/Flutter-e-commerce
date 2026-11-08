@@ -4,73 +4,12 @@ import 'package:digi_meh/features/auth/domain/use_cases/get_auth_user_use_case.d
 import 'package:digi_meh/features/auth/domain/use_cases/sign_in_use_case.dart';
 import 'package:digi_meh/features/auth/domain/use_cases/refresh_auth_session_use_case.dart';
 import 'package:digi_meh/features/auth/domain/use_cases/sign_up_use_case.dart';
+import 'package:digi_meh/features/auth/presentation/bloc/auth_status_bloc_event.dart';
+import 'package:digi_meh/features/auth/presentation/bloc/auth_status_bloc_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:digi_meh/features/auth/domain/entities/auth_token_entity.dart';
-import 'package:digi_meh/features/auth/domain/entities/user_entity.dart';
-
-sealed class AuthStatus {}
-
-class AuthStatusAuthenticated extends AuthStatus {
-  final User user;
-  final AuthTokens authTokens;
-  AuthStatusAuthenticated({required this.user, required this.authTokens});
-}
-
-class AuthStatusNotAuthenticated extends AuthStatus {}
-
-class AuthStatusSignUpSuccess extends AuthStatusNotAuthenticated {
-  final String userName;
-  final String password;
-  AuthStatusSignUpSuccess({required this.userName, required this.password});
-}
-
-class AuthStatusInProgress extends AuthStatus {}
-
-class AuthStatusInProgressSignUp extends AuthStatus {}
-
-class AuthStatusLocalFailed extends AuthStatus {}
-
-class AuthStatusFailedSignIn extends AuthStatus {
-  final bool fallBackToLoginPage;
-  final String? message;
-  AuthStatusFailedSignIn({this.fallBackToLoginPage = false, this.message});
-}
-
-class AuthStatusFailedSignUp extends AuthStatus {
-  final String? message;
-  AuthStatusFailedSignUp({this.message});
-}
-
-sealed class AuthEvent {}
-
-class AuthEventDoAuthenticateFromLocalToken extends AuthEvent {}
-
-class AuthEventDoSignIn extends AuthEvent {
-  final String userName;
-  final String password;
-
-  final bool checkOutWhenDone;
-  AuthEventDoSignIn({
-    required this.userName,
-    required this.password,
-    this.checkOutWhenDone = false,
-  });
-}
-
-class AuthEventDoSignUp extends AuthEvent {
-  final String userName;
-  final String password;
-  final String email;
-  final String phone;
-  AuthEventDoSignUp({
-    required this.userName,
-    required this.password,
-    required this.email,
-    required this.phone,
-  });
-}
 
 class AuthBloc extends Bloc<AuthEvent, AuthStatus> {
   AuthBloc() : super(AuthStatusNotAuthenticated()) {

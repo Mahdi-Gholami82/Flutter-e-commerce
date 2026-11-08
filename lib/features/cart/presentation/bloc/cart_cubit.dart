@@ -1,18 +1,10 @@
 import 'package:collection/collection.dart';
 import 'package:digi_meh/core/data/repositories/preferences_repository.dart';
 import 'package:digi_meh/features/cart/domain/entities/cart_item_entity.dart';
+import 'package:digi_meh/features/cart/presentation/bloc/cart_cubit_state.dart';
 import 'package:digi_meh/features/home/domain/entities/product_entity.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-
-class CartCubitState {
-  CartCubitState() : items = [];
-  final List<CartItem> items;
-
-  CartCubitState.fromItems({required this.items});
-
-  CartCubitState copy() => CartCubitState.fromItems(items: items);
-}
 
 class CartCubit extends Cubit<CartCubitState> {
   CartCubit() : super(CartCubitState());

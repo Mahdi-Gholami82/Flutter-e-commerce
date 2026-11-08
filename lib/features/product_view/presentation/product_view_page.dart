@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:digi_meh/core/presentation/widgets/custom_animated_borrom_insets.dart';
 import 'package:digi_meh/core/presentation/widgets/default_shimmer_network_image.dart';
 import 'package:digi_meh/features/cart/presentation/bloc/cart_cubit.dart';
+import 'package:digi_meh/features/cart/presentation/bloc/cart_cubit_state.dart';
 import 'package:digi_meh/features/home/domain/entities/product_entity.dart';
 import 'package:digi_meh/core/presentation/widgets/item_counter.dart';
 import 'package:digi_meh/features/product_view/presentation/widgets/page_view_indicated.dart';

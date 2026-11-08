@@ -1,4 +1,6 @@
 import 'package:digi_meh/core/presentation/widgets/custom_animated_borrom_insets.dart';
+import 'package:digi_meh/features/auth/presentation/bloc/auth_status_bloc_event.dart';
+import 'package:digi_meh/features/auth/presentation/bloc/auth_status_bloc_state.dart';
 import 'package:digi_meh/features/auth/presentation/bloc/auth_status_bloc.dart';
 import 'package:digi_meh/features/auth/presentation/pages/sign_up_page.dart';
 import 'package:digi_meh/features/auth/presentation/utils/validators.dart';
