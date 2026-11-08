@@ -22,6 +22,14 @@ class _SignInPageState extends State<SignInPage> {
   String userNameText = "";
   String passwordText = "";
 
+  void submit(BuildContext context) {
+    if (Form.of(context).validate()) {
+      BlocProvider.of<AuthBloc>(
+        context,
+      ).add(AuthEventDoSignIn(userName: userNameText, password: passwordText));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
@@ -69,44 +77,37 @@ class _SignInPageState extends State<SignInPage> {
               appBar: AppBar(),
               body: CustomAnimatedBottomInsets(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 40),
-                  child: Column(
-                    mainAxisAlignment: .center,
-                    crossAxisAlignment: .center,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 40,
+                    vertical: 20,
+                  ),
+                  child: ListView(
                     children: [
-                      Flexible(
-                        child: FittedBox(
-                          child: Icon(
-                            Icons.lock_outline_rounded,
-                            size: 150,
-                            color: colorScheme.primary,
-                          ),
-                        ),
+                      Icon(
+                        Icons.lock_outline_rounded,
+                        size: 125,
+                        color: colorScheme.primary,
                       ),
-                      Flexible(child: FittedBox(child: SizedBox(height: 24))),
-                      Flexible(
-                        child: FittedBox(
-                          fit: BoxFit.fitHeight,
-                          child: Column(
-                            mainAxisSize: .min,
-                            children: [
-                              Text(
-                                widget.checkOutWhenDone
-                                    ? "Almost there!"
-                                    : "Welcome back",
-                                style: TextStyle(
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              Text(
-                                widget.checkOutWhenDone
-                                    ? "Sign in to continue to checkout."
-                                    : "Sign in to access your account.",
-                              ),
-                            ],
+                      SizedBox(height: 24),
+                      Column(
+                        mainAxisSize: .min,
+                        children: [
+                          Text(
+                            widget.checkOutWhenDone
+                                ? "Almost there!"
+                                : "Welcome back",
+                            style: TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
-                        ),
+                          Text(
+                            widget.checkOutWhenDone
+                                ? "Sign in to continue to checkout."
+                                : "Sign in to access your account.",
+                            overflow: .ellipsis,
+                          ),
+                        ],
                       ),
                       SizedBox(height: 20),
                       Padding(
@@ -193,7 +194,7 @@ class _SignInPageState extends State<SignInPage> {
                           ],
                         ),
                       ),
-                      Flexible(child: FittedBox(child: SizedBox(height: 150))),
+                      FittedBox(child: SizedBox(height: 150)),
                     ],
                   ),
                 ),
@@ -203,13 +204,5 @@ class _SignInPageState extends State<SignInPage> {
         },
       ),
     );
-  }
-
-  void submit(BuildContext context) {
-    if (Form.of(context).validate()) {
-      BlocProvider.of<AuthBloc>(
-        context,
-      ).add(AuthEventDoSignIn(userName: userNameText, password: passwordText));
-    }
   }
 }

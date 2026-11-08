@@ -69,7 +69,10 @@ class _SignUpPageState extends State<SignUpPage> {
               appBar: AppBar(),
               body: CustomAnimatedBottomInsets(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 40,
+                    vertical: 20,
+                  ),
                   child: ListView(
                     children: [
                       Icon(
