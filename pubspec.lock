@@ -577,11 +577,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "v0.2.0"
-      resolved-ref: "9b511d8a499d4157cf823172bd9d6d17837f7c9e"
+      ref: "v0.4.0"
+      resolved-ref: ee75f4c09ad1ef2fb16867bd38e3d70f3fb291e4
       url: "https://github.com/Mahdi-Gholami82/shimmer_builder"
     source: git
-    version: "0.1.0"
+    version: "0.4.0"
   sky_engine:
     dependency: transitive
     description: flutter

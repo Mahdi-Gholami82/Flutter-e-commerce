@@ -24,6 +24,7 @@ class ProfilePage extends StatelessWidget {
         bool loggedIn = user != null;
         return Shimmer(
           enable: !loggedIn,
+          onlyPaintBackground: true,
           child: SafeArea(
             child: Stack(
               children: [
