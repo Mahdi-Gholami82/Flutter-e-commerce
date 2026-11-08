@@ -23,7 +23,7 @@ class _LandingPageState extends State<LandingPage> {
     final colorScheme = Theme.of(context).colorScheme;
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => ProductsBloc()),
+        BlocProvider(create: (_) => ProductsPagingBloc()),
         BlocProvider(create: (_) => SearchProductsBloc()),
       ],
       child: PersistentTabView(

@@ -2,13 +2,14 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:digi_meh/core/data/configs/constants.dart';
 import 'package:digi_meh/core/presentation/widgets/default_shimmer_network_image.dart';
 import 'package:digi_meh/features/home/domain/entities/product_entity.dart';
-import 'package:digi_meh/features/home/domain/entities/product_list_entity.dart';
 import 'package:digi_meh/features/home/presentation/bloc/products_bloc.dart';
+import 'package:digi_meh/features/home/presentation/bloc/products_paging_event.dart';
+import 'package:digi_meh/features/home/presentation/bloc/products_paging_state.dart';
 import 'package:digi_meh/features/home/presentation/bloc/search_products_bloc.dart';
-import 'package:digi_meh/features/home/presentation/widgets/pagination_selector.dart';
 import 'package:digi_meh/features/product_view/presentation/product_view_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:shimmer_builder/shimmer_builder.dart';
 
 class HomePage extends StatefulWidget {
@@ -21,16 +22,9 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   var searchController = SearchController();
   var scrollController = ScrollController();
-  int currentPageNumber = 0;
   final int carouselLimit = 3;
   List<Product>? randProducts;
   final double carouselHeight = 250;
-
-  void _getProducts(BuildContext context, int pageIndex) {
-    BlocProvider.of<ProductsBloc>(
-      context,
-    ).add(GetProductsEvent(pageNumber: pageIndex));
-  }
 
   void _triggerSearchViewRebuild() {
     const String zeroWidthSpace = '\u200B';
@@ -63,55 +57,49 @@ class _HomePageState extends State<HomePage> {
       (background: colorScheme.inverseSurface, foreground: colorScheme.surface),
     ];
     return Scaffold(
-      body: BlocConsumer<ProductsBloc, ProductsBlocState>(
+      body: BlocConsumer<ProductsPagingBloc, ProductsPagingState>(
         listener: (context, state) {
           var messenger = ScaffoldMessenger.of(context);
-          switch (state) {
-            case ProductsError error:
-              {
-                debugPrint(error.message);
-                messenger.hideCurrentSnackBar();
-                messenger.showSnackBar(
-                  SnackBar(
-                    content: Text("Failed to load products"),
-                    persist: false,
-                    action: SnackBarAction(
-                      label: "Retry",
-                      onPressed: () {
-                        _getProducts(context, currentPageNumber);
-                      },
-                    ),
-                  ),
-                );
-              }
-            case ProductsLoading _:
-              {
-                if (scrollController.position.hasContentDimensions) {
-                  scrollController.jumpTo(0);
-                }
-              }
-            case ProductsLoaded loaded:
-              {
-                currentPageNumber = loaded.result.page.number;
-                final products = loaded.result.products;
-                randProducts = [...products]..shuffle();
+          if (state.error != null) {
+            debugPrint(state.error.toString());
+            messenger.hideCurrentSnackBar();
+            messenger.showSnackBar(
+              SnackBar(
+                content: Text("Failed to load products"),
+                persist: false,
+                action: SnackBarAction(
+                  label: "Refresh",
+                  onPressed: () {
+                    BlocProvider.of<ProductsPagingBloc>(
+                      context,
+                    ).add(ProductsPagingRefresh());
+                  },
+                ),
+              ),
+            );
+          } else {
+            if (state.pages?.isNotEmpty ?? false) {
+              final products = state.pages!.first;
+              if (randProducts?.isEmpty ?? true) {
+                randProducts = [...products.nonNulls]..shuffle();
                 randProducts = randProducts!.sublist(0, carouselColors.length);
               }
-            case ProductsInitial():
+            }
           }
           messenger.hideCurrentSnackBar();
         },
         builder: (context, state) {
-          if (state is ProductsInitial) {
-            _getProducts(context, currentPageNumber);
+          bool isEmpty = state.pages?.isEmpty ?? true;
+          bool productsFirstPageLoaded = !isEmpty;
+          if (isEmpty && !state.isLoading) {
+            BlocProvider.of<ProductsPagingBloc>(
+              context,
+            ).add(ProductsPagingRefresh());
           }
-          ProductsLoaded? loadedState = state is ProductsLoaded ? state : null;
-          ProductsList? productsList = loadedState?.result;
-          bool productsLoaded = loadedState != null;
           List<Product> suggestions = [];
 
           return Shimmer(
-            enable: !productsLoaded,
+            enable: !productsFirstPageLoaded,
             child: SafeArea(
               child: Padding(
                 padding: EdgeInsetsGeometry.symmetric(horizontal: 20),
@@ -299,11 +287,29 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ),
-                    SliverGrid(
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                          Product? currentProduct =
-                              loadedState?.result.products[index];
+                    PagedSliverGrid(
+                      state: isEmpty
+                          ? state.copyWith(
+                              pages: [
+                                List.filled(productsListPaginationLimit, null),
+                              ],
+                              keys: [0],
+                              isLoading: false,
+                            )
+                          : state,
+                      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                        maxCrossAxisExtent: 150,
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
+                        mainAxisExtent: 175,
+                      ),
+                      fetchNextPage: () {
+                        BlocProvider.of<ProductsPagingBloc>(
+                          context,
+                        ).add(ProductsPagingFetchNext());
+                      },
+                      builderDelegate: PagedChildBuilderDelegate<Product?>(
+                        itemBuilder: (context, product, index) {
                           final border = BorderRadius.circular(15);
                           return Stack(
                             children: [
@@ -315,17 +321,16 @@ class _HomePageState extends State<HomePage> {
                                     color: colorScheme.outlineVariant,
                                   ),
                                 ),
-
                                 child: Ink(
                                   child: InkWell(
                                     customBorder: RoundedRectangleBorder(
                                       borderRadius: border,
                                     ),
                                     onTap: () {
-                                      if (currentProduct != null) {
+                                      if (product != null) {
                                         _pushToProductViewPage(
                                           context,
-                                          product: currentProduct,
+                                          product: product,
                                         );
                                       }
                                     },
@@ -344,10 +349,9 @@ class _HomePageState extends State<HomePage> {
                                                     enable: true,
                                                     child:
                                                         DefaultShimmerNetworkImage(
-                                                          uriString:
-                                                              currentProduct!
-                                                                  .thumbnail
-                                                                  .toString(),
+                                                          uriString: product!
+                                                              .thumbnail
+                                                              .toString(),
                                                         ),
                                                   ),
                                                 );
@@ -362,8 +366,8 @@ class _HomePageState extends State<HomePage> {
                                             padding: const EdgeInsets.all(8),
                                             child: ShimmerPaintOver(
                                               child: Text(
-                                                productsLoaded
-                                                    ? currentProduct!.title
+                                                productsFirstPageLoaded
+                                                    ? product!.title
                                                     : "sample txt",
                                                 style: TextStyle(
                                                   overflow:
@@ -377,7 +381,7 @@ class _HomePageState extends State<HomePage> {
                                           FittedBox(
                                             child: ShimmerPaintOver(
                                               child: Text(
-                                                "${productsLoaded ? currentProduct!.price : "11.29"} \$",
+                                                "${productsFirstPageLoaded ? product!.price : "11.29"} \$",
                                                 style:
                                                     theme
                                                         .textTheme
@@ -398,8 +402,8 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ),
                               ),
-                              if (productsLoaded &&
-                                  currentProduct!.discountPercentage != 0)
+                              if (productsFirstPageLoaded &&
+                                  product!.discountPercentage != 0)
                                 Positioned(
                                   top: 10,
                                   left: 10,
@@ -415,45 +419,15 @@ class _HomePageState extends State<HomePage> {
                                         fontSize: 10,
                                         fontWeight: FontWeight.w700,
                                       ),
-                                      "${currentProduct.discountPercentage.toStringAsFixed(1)} %",
+                                      "${product.discountPercentage.toStringAsFixed(1)} %",
                                     ),
                                   ),
                                 ),
                             ],
                           );
                         },
-                        childCount: productsLoaded
-                            ? productsList!.products.length
-                            : productsListPaginationLimit,
-                      ),
-                      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                        mainAxisSpacing: 10,
-                        crossAxisSpacing: 10,
-                        maxCrossAxisExtent: 150,
-                        mainAxisExtent: 175,
                       ),
                     ),
-                    if (productsLoaded && productsList!.page.totalPages > 0)
-                      SliverPadding(
-                        padding: EdgeInsetsGeometry.directional(
-                          top: 20,
-                          bottom: 10,
-                        ),
-                        sliver: SliverToBoxAdapter(
-                          child: PaginationSelector(
-                            numberOfOptions: 5,
-                            maxPage: productsLoaded
-                                ? productsList.page.totalPages - 1
-                                : 10,
-                            selected: productsLoaded
-                                ? productsList.page.number
-                                : 1,
-                            onTap: ({required int pageIndex}) {
-                              _getProducts(context, pageIndex);
-                            },
-                          ),
-                        ),
-                      ),
                   ],
                 ),
               ),
