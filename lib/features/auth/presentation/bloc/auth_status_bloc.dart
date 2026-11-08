@@ -37,7 +37,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthStatus> {
         }
         return;
       }
-      emit(AuthStatusLocalFailed());
+      emit(AuthStatusLocalFailed(keyFound: token != null));
     });
     on<AuthEventDoSignIn>((event, emit) async {
       emit(AuthStatusInProgress());

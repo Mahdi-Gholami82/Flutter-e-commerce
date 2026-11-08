@@ -21,7 +21,10 @@ class AuthStatusInProgress extends AuthStatus {}
 
 class AuthStatusInProgressSignUp extends AuthStatus {}
 
-class AuthStatusLocalFailed extends AuthStatus {}
+class AuthStatusLocalFailed extends AuthStatus {
+  AuthStatusLocalFailed({required this.keyFound});
+  bool keyFound;
+}
 
 class AuthStatusFailedSignIn extends AuthStatus {
   final bool fallBackToLoginPage;

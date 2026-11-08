@@ -27,7 +27,7 @@ class _LandingPageState extends State<LandingPage> {
     final colorScheme = Theme.of(context).colorScheme;
     return BlocBuilder<AuthBloc, AuthStatus>(
       builder: (context, state) {
-        if (state is AuthStatusLocalFailed) {
+        if (state is AuthStatusLocalFailed && state.keyFound) {
           WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
             if (context.mounted) {
               Navigator.of(
