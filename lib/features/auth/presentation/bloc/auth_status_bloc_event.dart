@@ -2,6 +2,8 @@ sealed class AuthEvent {}
 
 class AuthEventDoAuthenticateFromLocalToken extends AuthEvent {}
 
+class AuthReset extends AuthEvent {}
+
 class AuthEventDoSignIn extends AuthEvent {
   final String userName;
   final String password;

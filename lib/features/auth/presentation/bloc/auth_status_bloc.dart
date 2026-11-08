@@ -82,6 +82,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthStatus> {
         );
       }
     });
+    on<AuthReset>((event, emit) {
+      emit(AuthStatusNotAuthenticated());
+    });
   }
 
   @override
