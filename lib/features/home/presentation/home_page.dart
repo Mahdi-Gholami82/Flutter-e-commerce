@@ -104,7 +104,7 @@ class _HomePageState extends State<HomePage> {
             enable: !productsFirstPageLoaded,
             child: SafeArea(
               child: Padding(
-                padding: EdgeInsetsGeometry.symmetric(horizontal: 20),
+                padding: EdgeInsetsGeometry.symmetric(horizontal: 10),
                 child: CustomScrollView(
                   controller: scrollController,
                   slivers: [
