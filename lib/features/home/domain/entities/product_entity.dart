@@ -1,4 +1,5 @@
 import 'package:digi_meh/core/domain/entities/product_categories.dart';
+import 'package:digi_meh/features/home/domain/entities/review_entity.dart';
 
 class Product {
   int id;
@@ -10,6 +11,7 @@ class Product {
   int stock;
   List<ProductCategory> tags;
   List<Uri> images;
+  List<Review> reviews;
   Uri thumbnail;
 
   Product({
@@ -23,6 +25,7 @@ class Product {
     required this.tags,
     required this.images,
     required this.thumbnail,
+    required this.reviews,
   });
 
   @override

@@ -1,3 +1,5 @@
+import 'package:digi_meh/features/home/data/models/review_model.dart';
+
 class ProductModel {
   ProductModel({
     required this.id,
@@ -10,6 +12,7 @@ class ProductModel {
     required this.tags,
     required this.images,
     required this.thumbnail,
+    required this.reviews,
   });
   int id;
   String title;
@@ -20,6 +23,7 @@ class ProductModel {
   int stock;
   List<String> tags;
   List<String> images;
+  List<ReviewModel> reviews;
   String thumbnail;
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
@@ -36,6 +40,9 @@ class ProductModel {
           [],
       images: (json["images"] as List).cast<String>(),
       thumbnail: json["thumbnail"],
+      reviews: (json["reviews"] as List)
+          .map((e) => ReviewModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
   }
 }

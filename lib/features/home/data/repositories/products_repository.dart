@@ -5,6 +5,7 @@ import 'package:digi_meh/features/home/data/models/products_list_model.dart';
 import 'package:digi_meh/features/home/data/sources/products_source.dart';
 import 'package:digi_meh/features/home/domain/entities/product_entity.dart';
 import 'package:digi_meh/features/home/domain/entities/product_list_entity.dart';
+import 'package:digi_meh/features/home/domain/entities/review_entity.dart';
 
 abstract class ProductsRepository {
   Future<ProductsList> getProducts({required int pageNumber});
@@ -41,6 +42,17 @@ class ProductsRepositoryImpl extends ProductsRepository {
         .toList(),
     images: productModel.images.map(Uri.tryParse).nonNulls.toList(),
     thumbnail: Uri.parse(productModel.thumbnail),
+    reviews: productModel.reviews
+        .map(
+          (e) => Review(
+            rating: e.rating,
+            comment: e.comment,
+            date: e.date,
+            reviewerName: e.reviewerName,
+            reviewerEmail: e.reviewerEmail,
+          ),
+        )
+        .toList(),
   );
 
   @override

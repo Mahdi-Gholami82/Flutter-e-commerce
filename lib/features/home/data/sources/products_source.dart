@@ -5,7 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart';
 
 const String _selectProductFieldsQuery =
-    "id,title,description,price,discountPercentage,rating,stock,tags,images,thumbnail";
+    "id,title,description,price,discountPercentage,rating,stock,tags,images,thumbnail,reviews";
 
 abstract class ProductsSource {
   Future<ProductsListModel> getProducts({
