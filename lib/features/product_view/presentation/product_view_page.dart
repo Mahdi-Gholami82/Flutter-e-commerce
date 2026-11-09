@@ -286,8 +286,10 @@ class _ProductViewPageState extends State<ProductViewPage> {
                   alignment: AlignmentGeometry.bottomCenter,
                   child: SizedBox(
                     width: 300,
-                    child: Card(
+                    child: Material(
                       shape: StadiumBorder(),
+                      color: colorScheme.surfaceDim,
+                      elevation: 2,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 10,
