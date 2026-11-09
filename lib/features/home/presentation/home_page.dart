@@ -26,7 +26,7 @@ class _HomePageState extends State<HomePage> {
   var scrollController = ScrollController();
   final int carouselLimit = 3;
   List<Product>? randProducts;
-  final double carouselHeight = 250;
+  final double carouselHeight = 200;
 
   void _triggerSearchViewRebuild() {
     const String zeroWidthSpace = '\u200B';
