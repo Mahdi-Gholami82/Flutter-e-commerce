@@ -280,6 +280,7 @@ class _ProductViewPageState extends State<ProductViewPage> {
                         );
                       }, childCount: product.reviews.length),
                     ),
+                    SliverToBoxAdapter(child: SizedBox(height: 100)),
                   ],
                 ),
                 Align(
