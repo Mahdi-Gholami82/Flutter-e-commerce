@@ -165,7 +165,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                 value = value
                                     .replaceAll(r"(?!^)\+", "")
                                     .replaceAll(
-                                      RegExp(r"[^\p{Nd}\+\s]+", unicode: true),
+                                      RegExp(r"[^\p{Nd}\+\s-]+", unicode: true),
                                       "",
                                     )
                                     .replaceAll(RegExp(r"[-\s]+"), " ");
@@ -185,10 +185,9 @@ class _SignUpPageState extends State<SignUpPage> {
                                 if (value.isEmpty) {
                                   return "Phone cannot be empty";
                                 } else if (!RegExp(
-                                  r"^(\+\d{2})?[\-(?:\s+)]\d{10}$",
-                                ).hasMatch(
-                                  value.replaceAll(RegExp(r"\s"), ""),
-                                )) {
+                                  r"^(\+\p{Nd}{1,3})?[\-\s]\p{Nd}{10}$",
+                                  unicode: true,
+                                ).hasMatch(value)) {
                                   return "Invalid phone format";
                                 }
                                 return null;
